@@ -13,9 +13,11 @@ class Server{
         this.port = process.env.PORT;
         this.paths = {
             auth: '/api/auth',
-            usuario: '/api/usuario',
+            ciudadano: '/api/ciudadano',
             cargo:'/api/cargo',
-            uploads: '/api/uploads'
+            validarsunat:'/api/validarsunat',
+            mensaje:'/api/enviarmensaje',
+            uploads: '/api/uploads',
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -69,6 +71,10 @@ class Server{
     }
     routes(){
         this.app.use(this.paths.cargo, require('../routes/cargos'));
+        this.app.use(this.paths.validarsunat, require('../routes/validar-sunat'));
+        this.app.use(this.paths.ciudadano, require('../routes/ciudadanos'));
+        this.app.use(this.paths.mensaje, require('../routes/mensajes'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */

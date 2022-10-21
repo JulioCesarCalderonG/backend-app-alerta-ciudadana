@@ -2,10 +2,10 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 
 
-class Usuario extends Model{}
+class Ciudadano extends Model{}
 
 
-Usuario.init({
+Ciudadano.init({
     dni:{
         type:DataTypes.CHAR,
         allowNull: false
@@ -22,22 +22,16 @@ Usuario.init({
         type:DataTypes.STRING,
         allowNull:false,
     },
-    correo:{
-        type:DataTypes.STRING
-    },
-    imagen:{
-        type:DataTypes.STRING
-    },
     estado:{
         type:DataTypes.TINYINT,
         defaultValue:1
     }
 },{
     sequelize,
-    tableName:'usuario',
+    tableName:'ciudadano',
     timestamps:false
 });
 
 
 
-module.exports = Usuario;
+module.exports = Ciudadano;

@@ -1,9 +1,11 @@
 
 const Server = require("./server");
-const Usuario = require("./usuario");
+const Ciudadano = require("./ciudadano");
+const DetalleCiudadano = require("./detalle-ciudadano");
 const Cargo = require('./cargo');
 module.exports = {
   Server,
-  Usuario,
+  Ciudadano,
+  DetalleCiudadano,
   Cargo
 };
