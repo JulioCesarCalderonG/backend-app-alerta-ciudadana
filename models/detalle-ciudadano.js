@@ -5,10 +5,13 @@ const sequelize = require('../database/database');
 class DetalleCiudadano extends Model{};
 
 DetalleCiudadano.init({
+    celular:{
+        type:DataTypes.STRING
+    },
     correo:{
         type:DataTypes.STRING
     },
-    perfil:{
+    imagen:{
         type:DataTypes.STRING
     },
     id_ciudadano:{

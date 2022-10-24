@@ -3,8 +3,10 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload');
 const http = require('http');
 const socketIO = require('socket.io');
+const bodyParser = require('body-parser')
 const { conectarCliente } = require('../sockets/usuario-socket');
 const sequelize = require('../database/database');
+
 class Server{
     static _intance=Server;
     io=socketIO.Server;
@@ -14,6 +16,7 @@ class Server{
         this.paths = {
             auth: '/api/auth',
             ciudadano: '/api/ciudadano',
+            detalleciudadano:'/api/detalleciudadano',
             cargo:'/api/cargo',
             validarsunat:'/api/validarsunat',
             mensaje:'/api/enviarmensaje',
@@ -63,6 +66,8 @@ class Server{
         }));
         // Cors
         this.app.use(cors());
+        // Body
+        this.app.use(bodyParser.urlencoded({ extended: false }))
         // Lectura y parseo del body
         this.app.use(express.json());
         // Directorio publico
@@ -74,6 +79,7 @@ class Server{
         this.app.use(this.paths.validarsunat, require('../routes/validar-sunat'));
         this.app.use(this.paths.ciudadano, require('../routes/ciudadanos'));
         this.app.use(this.paths.mensaje, require('../routes/mensajes'));
+        this.app.use(this.paths.detalleciudadano, require('../routes/detalle-ciudadano'));
         this.app.use(this.paths.auth, require('../routes/auth'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));

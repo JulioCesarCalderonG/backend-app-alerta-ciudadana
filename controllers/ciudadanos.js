@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const { Ciudadano } = require("../models");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers");
-
+const jwt = require("jsonwebtoken");
 const getCiudadanos = async (req = request, res = response) => {
   try {
     const { estado } = req.query;
@@ -49,29 +49,29 @@ const postCiudadano = async (req = request, res = response) => {
 
     // Verificamos si el ciudadano ya esta registrado
     const resp = await Ciudadano.findOne({
-      where:{
-          dni
-      }
+      where: {
+        dni,
+      },
     });
     if (resp) {
       return res.status(400).json({
-        ok:false,
-        msg:`El dni ya esta registrado en el sistema`
-      })
+        ok: false,
+        msg: `El dni ya esta registrado en el sistema`,
+      });
     }
 
     // Validamos el password
-    if (password.length<=6) {
-        return res.status(400).json({
-            ok:false,
-            msg:'La contraseña debe ser mayor a 6 caracteres'
-        });
+    if (password.length <= 6) {
+      return res.status(400).json({
+        ok: false,
+        msg: "La contraseña debe ser mayor a 6 caracteres",
+      });
     }
     // Creamos un password Hasheado
     const salt = bcryptjs.genSaltSync();
     const hasPassword = bcryptjs.hashSync(password, salt);
     data.password = hasPassword;
-    data.dni =dni;
+    data.dni = dni;
     // Realizamos la subida del usuario al BD
     const ciudadano = await Ciudadano.create(data);
 
@@ -80,9 +80,9 @@ const postCiudadano = async (req = request, res = response) => {
 
     res.json({
       ok: true,
-      msg:"Se registro el usuario con exito",
+      msg: "Se registro el usuario con exito",
       ciudadano,
-      token
+      token,
     });
   } catch (error) {
     res.status(400).json({
@@ -117,10 +117,57 @@ const deleteCiudadano = async (req = request, res = response) => {
   }
 };
 
+const actualizarPassword = async (req = request, res = response) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    const { id } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+
+    // leer el ciudadano
+
+    const ciudadano = await Ciudadano.findOne({ id });
+
+    if (!ciudadano) {
+      return res.json({
+        ok: false,
+        msg: "Token no valido - ciudadano no existe en BD",
+        ciudadano: null,
+        token: null,
+      });
+    }
+    // Verificar si el uid tiene estado en tru
+    if (!ciudadano.estado) {
+      return res.json({
+        ok: false,
+        msg: "Token no valido - ciudadano no existe en BD",
+        ciudadano: null,
+        token: null,
+      });
+    }
+    // Creamos un password Hasheado
+    const salt = bcryptjs.genSaltSync();
+    const hasPassword = bcryptjs.hashSync(password, salt);
+    const resp = await Ciudadano.update({password:hasPassword}, {where:{
+      id:ciudadano.id
+    }})
+    
+    res.json({
+      ok: true,
+      msg:'Password Actualizado',
+      resp
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
 module.exports = {
   getCiudadanos,
   getCiudadano,
   postCiudadano,
   updateCiudadano,
   deleteCiudadano,
+  actualizarPassword,
 };
