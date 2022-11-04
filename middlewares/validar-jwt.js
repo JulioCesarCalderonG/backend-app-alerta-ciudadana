@@ -15,7 +15,11 @@ const validarJWT =async (req= request, res = response, next)=>{
 
         // leer el usuario
 
-        const ciudadano = await Ciudadano.findOne({id});
+        const ciudadano = await Ciudadano.findOne({
+            where:{
+                id
+            }
+        });
 
         if (!ciudadano) {
             return res.json({
@@ -37,7 +41,6 @@ const validarJWT =async (req= request, res = response, next)=>{
         req.ciudadanoToken = ciudadano;
         next();
     } catch (error) {
-        console.log(error);
         res.status(401).json({
             msg: 'Token no valido'
         })
