@@ -122,11 +122,14 @@ const actualizarPassword = async (req = request, res = response) => {
     const { token } = req.params;
     const { password } = req.body;
     const { id } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-
+    
     // leer el ciudadano
 
-    const ciudadano = await Ciudadano.findOne({ id });
-
+    const ciudadano = await Ciudadano.findOne({
+      where:{
+        id
+      }
+    });
     if (!ciudadano) {
       return res.json({
         ok: false,
