@@ -21,6 +21,7 @@ class Server{
             validarsunat:'/api/validarsunat',
             mensaje:'/api/enviarmensaje',
             uploads: '/api/uploads',
+            tipoalerta:'/api/tipoalerta'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -81,6 +82,7 @@ class Server{
         this.app.use(this.paths.mensaje, require('../routes/mensajes'));
         this.app.use(this.paths.detalleciudadano, require('../routes/detalle-ciudadano'));
         this.app.use(this.paths.auth, require('../routes/auth'));
+        this.app.use(this.paths.tipoalerta, require('../routes/tipo-alertas'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */
