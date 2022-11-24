@@ -1,11 +1,15 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Alerta = require("./alerta");
 
 class TipoAlerta extends Model{};
 
 TipoAlerta.init({
     nombre:{
         type:DataTypes.STRING
+    },
+    opcion_foto:{
+        type:DataTypes.INTEGER
     },
     icono:{
         type:DataTypes.STRING
@@ -23,6 +27,15 @@ TipoAlerta.init({
     timestamps:false
 });
 
+TipoAlerta.hasMany(Alerta,{
+    as:'alertaTipoAlerta',
+    foreignKey:'tipo_alerta'
+});
+
+Alerta.belongsTo(TipoAlerta,{
+    foreignKey:'tipo_alerta',
+    sourceKey:'id'
+})
 
 
 

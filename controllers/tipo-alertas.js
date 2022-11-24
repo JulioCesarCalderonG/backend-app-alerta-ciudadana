@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { subirArchivo } = require("../helpers");
 
-const { TipoAlerta } = require("../models");
+const { TipoAlerta, OpcionFoto } = require("../models");
 
 const getTipoAlertas = async (req = request, res = response) => {
   const { estado } = req.query;
@@ -11,6 +11,9 @@ const getTipoAlertas = async (req = request, res = response) => {
     where: {
       estado,
     },
+    include:{
+      model:OpcionFoto
+    }
   });
   try {
     res.json({
@@ -70,7 +73,7 @@ const mostrarImagenTipoAlerta = async (req = request, res = response) => {
 };
 const postTipoAlerta = async (req = request, res = response) => {
   try {
-    const { nombre, ...data } = req.body;
+    const { nombre,opcion, ...data } = req.body;
     const file = req.files;
     const img = await subirArchivo(
       file,
@@ -79,6 +82,7 @@ const postTipoAlerta = async (req = request, res = response) => {
     );
     data.nombre = nombre.toUpperCase();
     data.img = img;
+    data.opcion_foto=opcion;
     const tipoalerta = await TipoAlerta.create(data);
     res.json({
       ok: true,

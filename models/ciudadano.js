@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Alerta = require("./alerta");
 const DetalleCiudadano = require("./detalle-ciudadano");
 
 
@@ -33,6 +34,7 @@ Ciudadano.init({
     timestamps:false
 });
 
+/* Foreign key detalle ciudadano */
 Ciudadano.hasOne(DetalleCiudadano,{
     as:'detalleciudadano',
     foreignKey:'id_ciudadano'
@@ -40,7 +42,17 @@ Ciudadano.hasOne(DetalleCiudadano,{
 DetalleCiudadano.belongsTo(Ciudadano,{
     foreignKey:'id_ciudadano',
     sourceKey:'id'
-})
+});
+
+/* Foreign key alerta */
+Ciudadano.hasMany(Alerta,{
+    as:'ciudadanoAlerta',
+    foreignKey:'ciudadano'
+});
+Alerta.belongsTo(Ciudadano,{
+    foreignKey:'ciudadano',
+    sourceKey:'id'
+});
 
 
 module.exports = Ciudadano;
