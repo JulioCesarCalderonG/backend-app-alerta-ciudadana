@@ -17,6 +17,9 @@ TipoAlerta.init({
     img:{
         type:DataTypes.STRING
     },
+    color:{
+        type:DataTypes.CHAR
+    },
     estado:{
         type:DataTypes.TINYINT,
         defaultValue:1

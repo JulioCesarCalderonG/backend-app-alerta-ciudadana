@@ -73,7 +73,7 @@ const mostrarImagenTipoAlerta = async (req = request, res = response) => {
 };
 const postTipoAlerta = async (req = request, res = response) => {
   try {
-    const { nombre,opcion, ...data } = req.body;
+    const { nombre, opcion, ...data } = req.body;
     const file = req.files;
     const img = await subirArchivo(
       file,

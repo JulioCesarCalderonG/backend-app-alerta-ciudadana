@@ -1,4 +1,5 @@
 const { request, response } = require("express");
+const { subirArchivo } = require("../helpers");
 
 
 const getAlertas = async(req=request,res=response)=>{
@@ -28,7 +29,21 @@ const getAlerta = async(req=request,res=response)=>{
 
 const postAlerta = async(req=request,res=response)=>{
     try {
-        const data = req.body;
+        const {lat,lng,...data} = req.body;
+        
+        if (req.files) {
+            const file = req.files;
+            const foto = await subirArchivo(file,undefined,'alertas');
+            data.foto = foto;
+            return res.json({
+                foto,
+                data
+            })
+        }
+
+
+        data.lat = Number(lat);
+        data.lng = Number(lng);
         const ciudadano = req.ciudadanoToken;
         res.json({
             ok:true,
