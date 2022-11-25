@@ -1,10 +1,14 @@
 const { Router } = require("express");
-const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta } = require("../controllers/alertas");
+const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta, getAlertaCiudadano } = require("../controllers/alertas");
 const { validarCampos, validarJWT } = require("../middlewares");
 
 const router = Router();
 
 router.get('',getAlertas);
+router.get('/mostrar/ciudadano',[
+    validarJWT,
+    validarCampos
+],getAlertaCiudadano);
 router.get('/:id',getAlerta);
 router.post('',[
     validarJWT,
