@@ -49,7 +49,7 @@ const mostrarImagenTipoAlerta = async (req = request, res = response) => {
       },
     });
     if (!tipoalerta) {
-      const respuesta = path.join(__dirname, "../assets/", "no-image.png");
+      const respuesta = path.join(__dirname, "../assets/", "no-photo.jpg");
       return res.sendFile(respuesta);
     }
     const pathImagen = path.join(
@@ -61,7 +61,7 @@ const mostrarImagenTipoAlerta = async (req = request, res = response) => {
     if (fs.existsSync(pathImagen)) {
       return res.sendFile(pathImagen);
     } else {
-      const pathDefault = path.join(__dirname, "../assets/", "no-image.png");
+      const pathDefault = path.join(__dirname, "../assets/", "no-photo.jpg");
       return res.sendFile(pathDefault);
     }
   } catch (error) {
