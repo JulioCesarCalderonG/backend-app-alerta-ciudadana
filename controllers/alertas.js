@@ -63,7 +63,7 @@ const getAlertaCiudadano = async(req=request,res=response)=>{
 
 const postAlerta = async(req=request,res=response)=>{
     try {
-
+        
         const {...data} = req.body;
         const {hora, fecha}= funDate();
         const ciudadano = req.ciudadanoToken;
@@ -72,7 +72,7 @@ const postAlerta = async(req=request,res=response)=>{
             const foto = await subirArchivo(file,undefined,'alertas');
             data.foto = foto;
         }
-       data.fecha = fecha;
+        data.fecha = fecha;
         data.hora = hora;
         data.ciudadano = ciudadano.id;
         const alerta = await Alerta.create(data);
@@ -80,7 +80,7 @@ const postAlerta = async(req=request,res=response)=>{
             ok:true,
             msg:`Se envio la alerta ciudadana, la patrulla esta en camino`,
             alerta
-        }); 
+        });
     } catch (error) {
         console.log(error);
         res.status(400).json({
