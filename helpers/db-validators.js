@@ -1,4 +1,4 @@
-const { Ciudadano, TipoAlerta } = require("../models")
+const { Ciudadano, TipoAlerta, Usuario } = require("../models")
 
 
 
@@ -23,9 +23,19 @@ const nombreTipoAlerta = async(nombre='')=>{
         throw new Error(`El tipo de alerta: ${nombre} ya está registrado en el sistema`);
     }
 }
-
+const validarDNIUsuario =async(dni='')=>{
+    const resp = await Usuario.findOne({
+        where:{
+            dni
+        }
+    });
+    if (resp) {
+        throw new Error(`El dni: ${dni} ya está registrado en el sistema`);
+    }
+}
 
 module.exports = {
     validarDNICiudadano,
-    nombreTipoAlerta
+    nombreTipoAlerta,
+    validarDNIUsuario
 }

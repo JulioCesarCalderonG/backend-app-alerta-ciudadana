@@ -22,7 +22,10 @@ class Server{
             mensaje:'/api/enviarmensaje',
             uploads: '/api/uploads',
             tipoalerta:'/api/tipoalerta',
-            alerta:'/api/alerta'
+            alerta:'/api/alerta',
+            usuario:'/api/usuarios',
+            authusuario:'/api/authusuario',
+            tipoatencion:'/api/tipoatencion',
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -85,6 +88,9 @@ class Server{
         this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.tipoalerta, require('../routes/tipo-alertas'));
         this.app.use(this.paths.alerta, require('../routes/alertas'));
+        this.app.use(this.paths.usuario, require('../routes/usuarios'));
+        this.app.use(this.paths.authusuario, require('../routes/auth-usuario'));
+        this.app.use(this.paths.tipoatencion, require('../routes/tipo-atencion'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */

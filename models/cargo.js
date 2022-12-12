@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Usuario = require("./usuario");
 
 class Cargo extends Model{};
 
@@ -22,6 +23,15 @@ Cargo.init({
     tableName:'cargo',
     timestamps:false
 });
+
+Cargo.hasOne(Usuario,{
+    as:'CargoUsuario',
+    foreignKey:'id_cargo'
+});
+Usuario.belongsTo(Cargo,{
+    foreignKey:'id_cargo',
+    sourceKey:'id'
+})
 
 
 

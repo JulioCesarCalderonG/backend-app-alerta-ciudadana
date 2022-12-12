@@ -6,6 +6,9 @@ const Cargo = require('./cargo');
 const TipoAlerta = require("./tipo-alerta");
 const OpcionFoto= require("./opcion-foto");
 const Alerta = require("./alerta");
+const Usuario = require("./usuario");
+const TipoAtencion= require("./tipo-atencion");
+const CentroAtencion = require("./centro-atencion");
 module.exports = {
   Server,
   Ciudadano,
@@ -13,5 +16,8 @@ module.exports = {
   Cargo,
   TipoAlerta,
   OpcionFoto,
-  Alerta
+  Alerta,
+  Usuario,
+  TipoAtencion,
+  CentroAtencion
 };
