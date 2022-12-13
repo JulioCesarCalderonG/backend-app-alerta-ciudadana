@@ -1,4 +1,4 @@
-const { Ciudadano, TipoAlerta, Usuario } = require("../models")
+const { Ciudadano, TipoAlerta, Usuario, TipoAtencion } = require("../models")
 
 
 
@@ -33,9 +33,21 @@ const validarDNIUsuario =async(dni='')=>{
         throw new Error(`El dni: ${dni} ya está registrado en el sistema`);
     }
 }
+const nombreTipoAtencion =async(nombre='')=>{
+    const resp = await TipoAtencion.findOne({
+        where:{
+            nombre
+        }
+    });
+    if (resp) {
+        throw new Error(`El tipo de atencion: ${nombre} ya está registrado en el sistema`);
+    }
+}
+
 
 module.exports = {
     validarDNICiudadano,
     nombreTipoAlerta,
-    validarDNIUsuario
+    validarDNIUsuario,
+    nombreTipoAtencion
 }
