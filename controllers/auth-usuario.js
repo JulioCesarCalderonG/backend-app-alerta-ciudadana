@@ -1,12 +1,11 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
-const {generarJWT} = require("../helpers");
+const {generarJWT, generarJWTUsuario} = require("../helpers");
 const { Usuario, Cargo } = require("../models");
 
 const authUsuario = async (req = request, res = response) => {
   try {
     const { password, dni } = req.body;
-    console.log(password,dni);
     const resp = await Usuario.findOne({
       where: {
         dni
@@ -15,7 +14,6 @@ const authUsuario = async (req = request, res = response) => {
         model:Cargo
       }
     });
-    console.log(resp);
     if (!resp) {
       return res.json({
         ok: false,
@@ -41,7 +39,7 @@ const authUsuario = async (req = request, res = response) => {
         token: null,
       });
     }
-    token = await generarJWT(resp.id);
+    token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
     res.json({
         ok: true,
         msg: "Login correcto",
