@@ -10,7 +10,7 @@ CentroAtencion.init({
     lng:{
         type:DataTypes.FLOAT
     },
-    descripcion:{
+    direccion:{
         type:DataTypes.STRING
     },
     celular:{
@@ -20,10 +20,10 @@ CentroAtencion.init({
         type:DataTypes.CHAR
     },
     id_tipo_atencion:{
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     },
     id_usuario:{
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     },
     estado:{
         type:DataTypes.TINYINT,
