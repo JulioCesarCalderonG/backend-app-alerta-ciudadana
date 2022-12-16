@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
-const { Usuario } = require("../models");
+const { Usuario, Cargo } = require("../models");
 
 const getUsuarios = async (req = request, res = response) => {
   try {
@@ -8,7 +8,12 @@ const getUsuarios = async (req = request, res = response) => {
     const usuario = await Usuario.findAll({
       where:{
         estado
-      }
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
     });
     res.json({
       ok: true,
