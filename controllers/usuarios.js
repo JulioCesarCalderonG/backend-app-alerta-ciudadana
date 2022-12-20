@@ -52,7 +52,7 @@ const postUsuario = async (req = request, res = response) => {
     const {password,...data} = req.body;
     // Validamos el password
     if (password.length <= 6) {
-      return res.status(400).json({
+      return res.json({
         ok: false,
         msg: "La contraseña debe ser mayor a 6 caracteres",
       });
@@ -79,12 +79,36 @@ const postUsuario = async (req = request, res = response) => {
 const putUsuario = async (req = request, res = response) => {
   try {
     const {id} = req.params;
-    const data = req.body;
+    
+    const {password,...data} = req.body;
+    const resp = await Usuario.findOne({
+      where:{
+        id
+      }
+    });
+    if (!resp) {
+      return res.status(400).json({
+        ok:false,
+        msg:'No existe usuario con ese id'
+      });
+    }
+    if(password){
+      if (password.length <=6) {
+        return res.json({
+          ok:false,
+          msg: "La contraseña debe ser mayor a 6 caracteres",
+        })
+      }
+      const salt = bcryptjs.genSaltSync();
+      const hasPassword = bcryptjs.hashSync(password, salt);
+      data.password = hasPassword;
+    }
+    
     const usuario = await Usuario.update(data,{
       where:{
         id
       }
-    })
+    });
     res.json({
       ok: true,
       msg:'Usuario actualizado con exito',
