@@ -3,14 +3,46 @@ const { Ciudadano } = require("../models");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 const getCiudadanos = async (req = request, res = response) => {
   try {
-    const { estado } = req.query;
-    const ciudadano = await Ciudadano.findAll({
-      where: {
-        estado,
-      },
-    });
+    const { estado, buscar } = req.query;
+    if (buscar==="") {
+      const ciudadano = await Ciudadano.findAll({
+        where: {
+          estado,
+        },
+      });
+      return res.json({
+        ok: true,
+        msg: "Ciudadanos mostrados con exito",
+        ciudadano,
+      });
+    }
+    const ciudadano = await Ciudadano.findAll(
+      {
+        where:{
+          estado,
+          [Op.or]:[
+            {
+              dni:{
+                [Op.startsWith]:`%${buscar}%`
+              }, 
+            },
+            {
+              nombre:{
+                [Op.startsWith]:`%${buscar}%`
+              }, 
+            },
+            {
+              apellido:{
+                [Op.startsWith]:`%${buscar}%`
+              }, 
+            }
+          ]        
+        }
+      }
+    );
     res.json({
       ok: true,
       msg: "Ciudadanos mostrados con exito",
@@ -106,8 +138,19 @@ const updateCiudadano = async (req = request, res = response) => {
 
 const deleteCiudadano = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const {estado} = req.query;
+    const ciudadano = await Ciudadano.update({
+      estado
+    },{
+      where:{
+        id
+      }
+    })
     res.json({
       ok: true,
+      msg:(estado === '0') ? 'Se bloqueo el centro de atencion' :'Se desbloqueo el centro de atencion',
+      ciudadano
     });
   } catch (error) {
     res.status(400).json({

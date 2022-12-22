@@ -54,7 +54,8 @@ const getCentroAtencion = async (req = request, res = response) => {
 const postCentroAtencion = async (req = request, res = response) => {
   try {
     const usuario = req.usuarioToken;
-    const {direccion,...data} =req.body;
+    const {titulo,direccion,...data} =req.body;
+    data.titulo = titulo.toUpperCase();
     data.direccion = direccion.toUpperCase();
     data.id_usuario= usuario.id;
     const centroAtencion = await CentroAtencion.create(data);

@@ -4,6 +4,9 @@ const sequelize = require('../database/database');
 class CentroAtencion extends Model{};
 
 CentroAtencion.init({
+    titulo:{
+        type:DataTypes.STRING
+    },
     lat:{
         type:DataTypes.FLOAT
     },

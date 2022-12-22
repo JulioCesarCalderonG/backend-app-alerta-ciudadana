@@ -16,7 +16,7 @@ router.post('/',[
     validarCampos
 ],postCiudadano);
 router.put('/',updateCiudadano);
-router.delete('/',deleteCiudadano);
+router.delete('/:id',deleteCiudadano);
 router.post('/:token',actualizarPassword);
 
 
