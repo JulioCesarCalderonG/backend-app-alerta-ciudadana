@@ -28,6 +28,10 @@ Alerta.init({
     },
     tipo_alerta:{
         type:DataTypes.INTEGER
+    },
+    derivado:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
     }
 },{
     sequelize,

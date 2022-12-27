@@ -1,11 +1,12 @@
 const { request, response } = require("express");
-const { subirArchivo } = require("../helpers");
+const { subirArchivo, addHoursToDate } = require("../helpers");
 const {funDate} = require("../helpers");
 const { Alerta, Ciudadano, TipoAlerta } = require("../models");
-
+const sequelize = require('../database/database');
 
 const getAlertas = async(req=request,res=response)=>{
     try {
+        const data = req.body;
         const alerta = await Alerta.findAll({   
             include:[
                 {
@@ -17,10 +18,61 @@ const getAlertas = async(req=request,res=response)=>{
             ]
         });
         res.json({
+            data,
             ok:true,
             msg:`Se muestra todos las alertas cudadanas`,
-            alerta
+            alerta,
+            
         });
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error: ${error}`
+        });
+    }
+}
+const filtroAlerta =async(req=request,res=response)=>{
+    try {
+        const {tipo} =req.query;
+        const {fechaUno,fechaDos,tipoAlerta} = req.body;
+        const fechaAnter = addHoursToDate(new Date(),24);
+        const {fecha} = funDate();
+        let consulta = '';
+        switch (tipo) {
+            case '1':
+                consulta = `
+                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id  order by fecha ASC;
+                `
+                break;
+            case '2':
+                consulta = `
+                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where fecha>='${fechaUno}' AND fecha<='${fechaDos}' order by fecha desc
+                `
+                break;
+            case '3':
+                consulta = `
+                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where tipo_alerta='${tipoAlerta}'
+                `
+                break;
+            case '4':
+                consulta = `
+                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where fecha>='${fechaAnter}' AND fecha<='${fecha}' order by fecha desc
+                `
+                break;
+            default:
+                consulta = 'select* from alertas'
+                break;
+        }
+        const [results, metadata] = await sequelize.query(consulta);
+        res.json({
+            ok:true,
+            msg:'Se muestran las alertas con exito',
+            results
+        })
     } catch (error) {
         res.status(400).json({
             ok:false,
@@ -121,6 +173,7 @@ module.exports = {
     getAlertas,
     getAlerta,
     getAlertaCiudadano,
+    filtroAlerta,
     postAlerta,
     putAlerta,
     deleteAlerta
