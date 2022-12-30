@@ -6,16 +6,17 @@ const { subirArchivo } = require("../helpers");
 const { TipoAlerta, OpcionFoto } = require("../models");
 
 const getTipoAlertas = async (req = request, res = response) => {
-  const { estado } = req.query;
-  const tipoalerta = await TipoAlerta.findAll({
-    where: {
-      estado,
-    },
-    include:{
-      model:OpcionFoto
-    }
-  });
+
   try {
+    const { estado } = req.query;
+    const tipoalerta = await TipoAlerta.findAll({
+      where: {
+        estado,
+      },
+      include:{
+        model:OpcionFoto
+      }
+    });
     res.json({
       ok: true,
       msg: "Se muestran todas las alertas",
@@ -30,8 +31,19 @@ const getTipoAlertas = async (req = request, res = response) => {
 };
 const getTipoAlerta = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const tipoalerta = await  TipoAlerta.findOne({
+      where:{
+        id
+      },
+      include:{
+        model:OpcionFoto
+      }
+    })
     res.json({
       ok: true,
+      msg:`Se muestran el tipo de alerta con el id: ${id}`,
+      tipoalerta
     });
   } catch (error) {
     res.status(400).json({
@@ -98,8 +110,19 @@ const postTipoAlerta = async (req = request, res = response) => {
 };
 const putTipoAlerta = async (req = request, res = response) => {
   try {
+    const { nombre, opcion, ...data } = req.body;
+    const {id} = req.params;
+    data.nombre = nombre.toUpperCase();
+    data.opcion_foto=opcion;
+    const tipoAlerta = await TipoAlerta.update(data,{
+      where:{
+        id
+      }
+    })
     res.json({
       ok: true,
+      msg:`Se actualizo el tipo alerta con el id ${id}`,
+      tipoAlerta
     });
   } catch (error) {
     res.status(400).json({
@@ -110,8 +133,19 @@ const putTipoAlerta = async (req = request, res = response) => {
 };
 const deleteTipoAlerta = async (req = request, res = response) => {
   try {
+    const {estado} = req.query;
+    const {id} = req.params;
+    const tipoAlerta = await TipoAlerta.update({
+      estado
+    },{
+      where:{
+        id
+      }
+    })
     res.json({
       ok: true,
+      msg:(estado === '0')?'Se bloqueo el tipo de alerta con exito':'Se desbloqueo el tipo de alerta con exito',
+      tipoAlerta
     });
   } catch (error) {
     res.status(400).json({

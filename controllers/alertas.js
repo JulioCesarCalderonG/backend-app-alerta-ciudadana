@@ -42,7 +42,7 @@ const filtroAlerta =async(req=request,res=response)=>{
             case '1':
                 consulta = `
                 select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id  order by fecha ASC;
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id  order by fecha desc
                 `
                 break;
             case '2':
@@ -54,7 +54,7 @@ const filtroAlerta =async(req=request,res=response)=>{
             case '3':
                 consulta = `
                 select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where tipo_alerta='${tipoAlerta}'
+                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where tipo_alerta='${tipoAlerta}  order by fecha desc'
                 `
                 break;
             case '4':

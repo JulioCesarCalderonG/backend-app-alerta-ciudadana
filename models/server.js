@@ -28,6 +28,7 @@ class Server{
             tipoatencion:'/api/tipoatencion',
             uploadgeneral:'/api/uploadgeneral',
             centroatencion:'/api/centroatencion',
+            opcionfoto:'/api/opcionfoto'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -95,6 +96,7 @@ class Server{
         this.app.use(this.paths.tipoatencion, require('../routes/tipo-atencion'));
         this.app.use(this.paths.uploadgeneral, require('../routes/uploads-general'));
         this.app.use(this.paths.centroatencion, require('../routes/centro-atencion'));
+        this.app.use(this.paths.opcionfoto, require('../routes/opcion-foto'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */
