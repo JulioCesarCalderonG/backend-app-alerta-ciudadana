@@ -98,7 +98,12 @@ const getAlertaCiudadano = async(req=request,res=response)=>{
         const alerta = await Alerta.findAll({
             where:{
                 ciudadano:id
-            }
+            },
+            include:[
+                {
+                    model:TipoAlerta
+                }
+            ]
         })
         res.json({
             ok:true,
