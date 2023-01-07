@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { putUploadTipoAtencion, mostrarTipoAtencion, mostrarTipoAlerta, putUploadTipoAlerta } = require("../controllers/uploads-general");
+const { putUploadTipoAtencion, mostrarTipoAtencion, mostrarTipoAlerta, putUploadTipoAlerta, mostrarImageCiudadano } = require("../controllers/uploads-general");
 const { validarCampos, validarArchivoSubir } = require("../middlewares");
 
 
@@ -13,6 +13,7 @@ router.put('/tipo-atencion/:id',[
     validarCampos
 ],putUploadTipoAtencion);
 router.get('/tipo-alerta/:nombre/:id',mostrarTipoAlerta);
+router.get('/ciudadano/:id',mostrarImageCiudadano);
 router.put('/tipo-alerta/:id',[
     validarArchivoSubir,
     validarCampos

@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const path = require("path");
 const fs = require("fs");
-const { TipoAtencion, TipoAlerta } = require("../models");
+const { TipoAtencion, TipoAlerta, DetalleCiudadano } = require("../models");
 const { subirArchivo } = require("../helpers");
 
 const mostrarTipoAtencion = async (req = request, res = response) => {
@@ -60,7 +60,37 @@ const mostrarTipoAlerta = async (req = request, res = response) => {
       );
       return res.sendFile(pathImagen);
     }
-    const pathImagenDefault = path.join(__dirname, "../assets/no-image.jpg");
+    const pathImagenDefault = path.join(__dirname, "../assets/no-image.png");
+    return res.sendFile(pathImagenDefault);
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
+const mostrarImageCiudadano = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const resp = await DetalleCiudadano.findOne({
+      where: {
+        id
+      },
+    });
+    if (!resp) {
+      const pathImagenDefaults = path.join(__dirname, "../assets/no-photo.jpg");
+      return res.sendFile(pathImagenDefaults);
+    }
+    if (resp.img) {
+      const pathImagen = path.join(
+        __dirname,
+        "../uploads",
+        "ciudadano",
+        resp.img
+      );
+      return res.sendFile(pathImagen);
+    }
+    const pathImagenDefault = path.join(__dirname, "../assets/no-photo.jpg");
     return res.sendFile(pathImagenDefault);
   } catch (error) {
     res.status(400).json({
@@ -157,5 +187,6 @@ module.exports = {
   putUploadTipoAtencion,
   mostrarTipoAtencion,
   putUploadTipoAlerta,
-  mostrarTipoAlerta
+  mostrarTipoAlerta,
+  mostrarImageCiudadano
 };

@@ -1,5 +1,6 @@
 const { request, response } = require("express");
-const { DetalleCiudadano } = require("../models");
+const { DetalleCiudadano, Ciudadano } = require("../models");
+const bcryptjs = require("bcryptjs");
 
 const getDetalleCiudadanos = async (req = request, res = response) => {
   try {
@@ -23,11 +24,17 @@ const getDetalleCiudadano = async (req = request, res = response) => {
       where: {
         id_ciudadano: ciudadano.id,
       },
+      include:[
+        {
+          model:Ciudadano
+        }
+      ]
     });
     res.json({
       ok: true,
       msg: "Datos de ciudadano mostrado con exito",
       detalleCiudadano,
+      ciudadano
     });
   } catch (error) {
     res.status(400).json({
@@ -48,7 +55,18 @@ const postDetalleCiudadano = async (req = request, res = response) => {
         id_ciudadano: ciudadano.id,
       },
     });
-
+    if (data.password  && data.password.length>6) {
+      const salt = bcryptjs.genSaltSync();
+      const hasPassword = bcryptjs.hashSync(data.password, salt);
+      console.log(hasPassword);
+      const actCiudadano = await Ciudadano.update({
+        password:hasPassword
+      },{
+        where:{
+          id:ciudadano.id
+        }
+      });
+    }
     if (resp) {
       console.log("existe");
       detalleCiudadano = await DetalleCiudadano.update(data, {

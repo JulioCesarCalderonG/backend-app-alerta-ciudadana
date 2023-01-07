@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/',getTipoAlertas);
 router.get('/:id',getTipoAlerta);
-router.get('/mostrar/imagen/:id',mostrarImagenTipoAlerta)
+router.get('/mostrar/imagen/:ciudadano/:id',mostrarImagenTipoAlerta)
 router.post('/',[
     check('nombre').custom(nombreTipoAlerta),
     validarArchivoSubir,
