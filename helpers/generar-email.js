@@ -6,7 +6,7 @@ const enviarWelcome = async (email='', token='') => {
 
   try {
     const envioEmail = await transport.sendMail({
-      from: '"Gongal Soft 👻" <gongal.soft@gmail.com>', // sender address
+      from: '"Gongal Soft 👻" <gongalso@gongalsoft.com>', // sender address
       to: email, // list of receivers
       subject: `Recuperacion de contraseña`, // Subject line
       //text: "Hello world?", // plain text body

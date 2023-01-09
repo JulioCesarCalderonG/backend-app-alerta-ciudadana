@@ -2,7 +2,7 @@ require('dotenv').config();
 const nodemailer = require("nodemailer");
 const colors = require('colors');
 const transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "mail.gongalsoft.com",
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
