@@ -48,6 +48,53 @@ const validarJWT =async (req= request, res = response, next)=>{
     
     
 }
+const validarJWTParams =async (req= request, res = response, next)=>{ 
+    const {token} = req.query;
+    console.log(token);
+    if (!token) {
+        return res.status(401).json({
+            msg: 'No hay token en la peticion'
+        })
+    }
+
+    try {
+        const {id} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+
+        // leer el usuario
+
+        const ciudadano = await Ciudadano.findOne({
+            where:{
+                id
+            }
+        });
+
+        if (!ciudadano) {
+            return res.json({
+                ok:false,
+                msg: 'Token no valido - ciudadano no existe en BD',
+                ciudadano:null,
+                token:null
+            })
+        }
+        // Verificar si el uid tiene estado en tru
+        if (!ciudadano.estado) {
+            return res.json({
+                ok:false,
+                msg: 'Token no valido - ciudadano no existe en BD',
+                ciudadano:null,
+                token:null
+            })
+        }
+        req.ciudadanoToken = ciudadano;
+        next();
+    } catch (error) {
+        res.status(401).json({
+            msg: 'Token no valido'
+        })
+    }
+    
+    
+}
 const validarJWTUsuario =async (req= request, res = response, next)=>{ 
     const token = req.header('x-token');
     if (!token) {
@@ -96,5 +143,6 @@ const validarJWTUsuario =async (req= request, res = response, next)=>{
 }
 module.exports = {
     validarJWT,
-    validarJWTUsuario 
+    validarJWTUsuario,
+    validarJWTParams
 }

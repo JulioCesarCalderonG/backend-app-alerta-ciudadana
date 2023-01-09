@@ -71,22 +71,22 @@ const mostrarTipoAlerta = async (req = request, res = response) => {
 };
 const mostrarImageCiudadano = async (req = request, res = response) => {
   try {
-    const { id } = req.params;
+    const ciudadano = req.ciudadanoToken;
     const resp = await DetalleCiudadano.findOne({
       where: {
-        id
+        id_ciudadano:ciudadano.id
       },
     });
     if (!resp) {
       const pathImagenDefaults = path.join(__dirname, "../assets/no-photo.jpg");
       return res.sendFile(pathImagenDefaults);
     }
-    if (resp.img) {
+    if (resp.imagen) {
       const pathImagen = path.join(
         __dirname,
         "../uploads",
-        "ciudadano",
-        resp.img
+        "detalle-ciudadano",
+        resp.imagen
       );
       return res.sendFile(pathImagen);
     }
@@ -182,11 +182,60 @@ const putUploadTipoAlerta = async (req = request, res = response) => {
     });
   }
 };
-
+const putUploadCiudadano = async (req = request, res = response) => {
+  try {
+    const ciuda = req.ciudadanoToken;
+    const file = req.files;
+    const resp = await DetalleCiudadano.findOne({
+      where: {
+        id_ciudadano:ciuda.id
+      },
+    });
+    console.log(resp);
+    if (!resp) {
+      const img = await subirArchivo(file, undefined, 'detalle-ciudadano');
+      const data = {};
+      data.imagen = img;
+      data.id_ciudadano = ciuda.id;
+      const ciudadano = await DetalleCiudadano.create(data);
+      return res.json({
+        ok: true,
+        msg: 'Se actualizo la imagen con exito',
+        ciudadano
+      });
+    }
+    if (resp.imagen) {
+      const pathImagen = path.join(
+        __dirname,
+        "../uploads",
+        "detalle-ciudadano",
+        resp.imagen
+      );
+      if (fs.existsSync(pathImagen)) {
+        fs.unlinkSync(pathImagen);
+      }
+    }
+    
+    const img = await subirArchivo(file, undefined, "detalle-ciudadano");
+    resp.imagen = img;
+    const ciudadano = await resp.save();
+    res.json({
+      ok: true,
+      msg: "Se actualizo la imagen con exito",
+      ciudadano,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 module.exports = {
   putUploadTipoAtencion,
   mostrarTipoAtencion,
   putUploadTipoAlerta,
   mostrarTipoAlerta,
-  mostrarImageCiudadano
+  mostrarImageCiudadano,
+  putUploadCiudadano
 };

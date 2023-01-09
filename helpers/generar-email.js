@@ -15,19 +15,23 @@ const enviarWelcome = async (email='', token='') => {
     if (!envioEmail) {
         return {
             ok:false,
-            resp: 'Mensaje no enviado'
+            resp: 'Mensaje no enviado',
+            envioEmail
         }
     }
     if (envioEmail) {
       return{
           ok:true,
-          resp:'Mensaje enviado exitosamente'
+          resp:'Mensaje enviado exitosamente',
+          envioEmail
       }
     }
   } catch (error) {
+    
     return {
       ok:false,
-      resp: `Porfavor, verifique su conexion a internet o el correo electronico`
+      resp: `Porfavor, verifique su conexion a internet o el correo electronico`,
+      error
     }
   }
 };

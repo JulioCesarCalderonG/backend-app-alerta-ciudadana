@@ -6,6 +6,7 @@ const socketIO = require('socket.io');
 const bodyParser = require('body-parser')
 const { conectarCliente } = require('../sockets/usuario-socket');
 const sequelize = require('../database/database');
+const { actualizarAlertaCiudadano } = require('../sockets/alertas-socket');
 
 class Server{
     static _intance=Server;
@@ -63,6 +64,7 @@ class Server{
         this.io.on('connection', cliente=>{
             console.log('Cliente conectado');
             conectarCliente(cliente, this.io);
+            actualizarAlertaCiudadano(cliente,this.io);
         })
     }
     middlewares(){
