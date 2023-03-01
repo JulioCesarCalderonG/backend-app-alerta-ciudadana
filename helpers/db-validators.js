@@ -1,4 +1,4 @@
-const { Ciudadano, TipoAlerta, Usuario, TipoAtencion } = require("../models")
+const { Ciudadano, TipoAlerta, Usuario, TipoAtencion, AlertaDerivada } = require("../models")
 
 
 
@@ -44,10 +44,22 @@ const nombreTipoAtencion =async(nombre='')=>{
     }
 }
 
+const alertaDerivada= async(id_alerta='')=>{
+    const resp = await AlertaDerivada.findOne({
+        where:{
+            id_alerta
+        }
+    });
+    if (resp) {
+        throw new Error(`La alerta con el id: ${id_alerta} ya ha sido derivado al serenazgo`);
+    }
+}
+
 
 module.exports = {
     validarDNICiudadano,
     nombreTipoAlerta,
     validarDNIUsuario,
-    nombreTipoAtencion
+    nombreTipoAtencion,
+    alertaDerivada
 }
