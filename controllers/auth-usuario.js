@@ -39,11 +39,18 @@ const authUsuario = async (req = request, res = response) => {
         token: null,
       });
     }
+    const usuario = await Usuario.update({
+      disponible:1
+    },{
+      where:{
+        id:resp.id
+      }
+    });
     token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
     res.json({
         ok: true,
         msg: "Login correcto",
-        usuario: resp,
+        usuario:resp,
         token,
       });
   } catch (error) {
@@ -53,7 +60,30 @@ const authUsuario = async (req = request, res = response) => {
     });
   }
 };
+const logoutUsuario = async (req = request, res = response)=>{
+  try {
+    const {id} = req.usuarioToken;
+    const usuario = await Usuario.update({
+      disponible:0
+    },{
+      where:{
+        id
+      }
+    });
 
+    res.json({
+      ok:true,
+      msg:'Se cerro sesion del usuario',
+      usuario
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+}
 module.exports = {
   authUsuario,
+  logoutUsuario,
 };

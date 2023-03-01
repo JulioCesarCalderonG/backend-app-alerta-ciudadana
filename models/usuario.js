@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const AlertaDerivada = require("./alerta-derivada");
 const CentroAtencion = require("./centro-atencion");
 
 class Usuario extends Model{};
@@ -24,6 +25,9 @@ Usuario.init({
     },
     id_cargo:{
         type:DataTypes.INTEGER
+    },
+    disponible:{
+        type:DataTypes.TINYINT
     }
 },{
     sequelize,
@@ -38,6 +42,16 @@ Usuario.hasMany(CentroAtencion,{
 });
 
 CentroAtencion.belongsTo(Usuario,{
+    foreignKey:'id_usuario',
+    sourceKey:'id'
+});
+
+Usuario.hasMany(AlertaDerivada,{
+    as:'FK_AlertaDerivadaUsuario',
+    foreignKey:'id_usuario'
+});
+
+AlertaDerivada.belongsTo(Usuario,{
     foreignKey:'id_usuario',
     sourceKey:'id'
 })

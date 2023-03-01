@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { getUsuarios, getUsuario, postUsuario, putUsuario, deleteUsuario } = require("../controllers/usuarios");
+const { getUsuarios, getUsuario, postUsuario, putUsuario, deleteUsuario, getSerenazgo } = require("../controllers/usuarios");
 const { validarDNIUsuario } = require("../helpers");
 const { validarCampos } = require("../middlewares");
 
@@ -10,6 +10,7 @@ const router = Router();
 
 
 router.get('',getUsuarios);
+router.get('/mostrar/serenazgo',getSerenazgo);
 router.get('/:id',getUsuario);
 router.post('',[
     check('dni').custom(validarDNIUsuario),

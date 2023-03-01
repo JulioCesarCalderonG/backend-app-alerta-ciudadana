@@ -30,12 +30,26 @@ const getDetalleCiudadano = async (req = request, res = response) => {
         }
       ]
     });
-    res.json({
+    if (!detalleCiudadano) {
+      const data = {
+        celular:'',
+        correo:'',
+        imagen:'asaaa'
+      }
+      return res.json({
+        ok: true,
+        msg: "Datos de ciudadano mostrado con exito",
+        detalleCiudadano:data,
+        ciudadano
+      });
+    }
+    return res.json({
       ok: true,
       msg: "Datos de ciudadano mostrado con exito",
       detalleCiudadano,
       ciudadano
     });
+    
   } catch (error) {
     res.status(400).json({
       ok: false,

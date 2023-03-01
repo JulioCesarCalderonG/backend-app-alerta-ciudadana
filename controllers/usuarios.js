@@ -27,6 +27,32 @@ const getUsuarios = async (req = request, res = response) => {
     });
   }
 };
+const getSerenazgo = async (req = request, res = response) => {
+  try {
+    const {estado} = req.query;
+    const usuario = await Usuario.findAll({
+      where:{
+        estado:1,
+        disponible:1
+      },
+      include:[
+        {
+          model:Cargo
+        }
+      ]
+    });
+    res.json({
+      ok: true,
+      msg:'Se muestran los usuarios con exito',
+      usuario
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 const getUsuario = async (req = request, res = response) => {
   try {
     const {id} = req.params;
@@ -149,6 +175,7 @@ const deleteUsuario = async (req = request, res = response) => {
 module.exports = {
   getUsuarios,
   getUsuario,
+  getSerenazgo,
   postUsuario,
   putUsuario,
   deleteUsuario,

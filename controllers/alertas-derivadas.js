@@ -1,13 +1,56 @@
 const { request, response } = require("express");
-const { AlertaDerivada } = require("../models");
+const { AlertaDerivada, Alerta, Usuario } = require("../models");
 
 
 
 const getAlertaDerivadas=async (req = request, res = response) =>{
     try {
+        const alertaDerivada = await AlertaDerivada.findAll(
+            {
+                include:[
+                    {
+                        model:Alerta
+                    },
+                    {
+                        model:Usuario
+                    }
+                ]
+            }
+        );
         res.json({
             ok:true,
-            msg:'Se muestran los datos con exito'
+            msg:'Se muestran las alertas derivadas con exito',
+            alertaDerivada
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            error:`${error}`
+        })
+    }
+}
+const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
+    try {
+        const {id} = req.usuarioToken;
+        const alertaDerivada = await AlertaDerivada.findAll(
+            {
+                where:{
+                    id_usuario:id
+                },
+                include:[
+                    {
+                        model:Alerta
+                    },
+                    {
+                        model:Usuario
+                    }
+                ]
+            }
+        );
+        res.json({
+            ok:true,
+            msg:'Se muestran las alertas derivadas con exito',
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
@@ -18,9 +61,24 @@ const getAlertaDerivadas=async (req = request, res = response) =>{
 }
 const getAlertaDerivada=async (req = request, res = response) =>{
     try {
+        const {id} = req.params;
+        const alertaDerivada = await AlertaDerivada.findOne({
+            where:{
+                id
+            },
+            include:[
+                {
+                    model:Alerta
+                },
+                {
+                    model:Usuario
+                }
+            ]
+        })
         res.json({
             ok:true,
-            msg:'Se muestran los datos con exito'
+            msg:'Se muestran la alerta derivada con exito',
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
@@ -35,8 +93,8 @@ const postAlertaDerivada=async (req = request, res = response) =>{
         const alertaDerivada = await AlertaDerivada.create(data);
         res.json({
             ok:true,
-            msg:'Se muestran los datos con exito',
-            data
+            msg:'Se derivo la alerta con exito',
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
@@ -47,9 +105,17 @@ const postAlertaDerivada=async (req = request, res = response) =>{
 }
 const putAlertaDerivada=async (req = request, res = response) =>{
     try {
+        const data = req.body;
+        const {id} = req.params;
+        const alertaDerivada = await AlertaDerivada.update(data,{
+            where:{
+                id
+            }
+        })
         res.json({
             ok:true,
-            msg:'Se muestran los datos con exito'
+            msg:'Se actualizo con exito la alerta',
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
@@ -60,9 +126,16 @@ const putAlertaDerivada=async (req = request, res = response) =>{
 }
 const deleteAlertaDerivada=async (req = request, res = response) =>{
     try {
+        const {id} = req.params;
+        const alertaDerivada = await AlertaDerivada.destroy({
+            where:{
+                id
+            }
+        });
         res.json({
             ok:true,
-            msg:'Se muestran los datos con exito'
+            msg:'Se elimino la alerta derivada con exito',
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
@@ -77,6 +150,7 @@ const deleteAlertaDerivada=async (req = request, res = response) =>{
 module.exports = {
     getAlertaDerivadas,
     getAlertaDerivada,
+    getAlertaDerivadasUsuario,
     postAlertaDerivada,
     putAlertaDerivada,
     deleteAlertaDerivada
