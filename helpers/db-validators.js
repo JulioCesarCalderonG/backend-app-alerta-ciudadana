@@ -48,10 +48,15 @@ const alertaDerivada= async(id_alerta='')=>{
     const resp = await AlertaDerivada.findOne({
         where:{
             id_alerta
-        }
+        },
+        include:[
+            {
+                model:Usuario
+            }
+        ]
     });
     if (resp) {
-        throw new Error(`La alerta con el id: ${id_alerta} ya ha sido derivado al serenazgo`);
+        throw new Error(`La alerta ya ha sido derivado al serenazgo ${resp.Usuario.nombre} ${resp.Usuario.apellido}`);
     }
 }
 

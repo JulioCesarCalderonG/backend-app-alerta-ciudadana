@@ -1,15 +1,24 @@
 const { request, response } = require("express");
-const { AlertaDerivada, Alerta, Usuario } = require("../models");
+const { AlertaDerivada, Alerta, Usuario, Ciudadano } = require("../models");
 
 
 
 const getAlertaDerivadas=async (req = request, res = response) =>{
     try {
+        const {tipo} = req.query;
         const alertaDerivada = await AlertaDerivada.findAll(
             {
+                where:{
+                    atencion:tipo
+                },
                 include:[
                     {
-                        model:Alerta
+                        model:Alerta,
+                        include:[
+                            {
+                                model:Ciudadano
+                            }
+                        ]
                     },
                     {
                         model:Usuario
@@ -35,7 +44,8 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
         const alertaDerivada = await AlertaDerivada.findAll(
             {
                 where:{
-                    id_usuario:id
+                    id_usuario:id,
+                    atencion:0
                 },
                 include:[
                     {

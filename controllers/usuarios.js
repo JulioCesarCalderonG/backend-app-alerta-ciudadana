@@ -33,7 +33,8 @@ const getSerenazgo = async (req = request, res = response) => {
     const usuario = await Usuario.findAll({
       where:{
         estado:1,
-        disponible:1
+        disponible:1,
+        id_cargo:1
       },
       include:[
         {

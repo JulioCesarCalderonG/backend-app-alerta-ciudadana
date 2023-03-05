@@ -34,12 +34,14 @@ const getFiltroAlertas = async (req = request, res = response) => {
   try {
     const { buscar } = req.query;
     const { fecha,hora } = funDate();
-    const {fechaAnterior} = fechaAntes();
+    const fechaAnterior = addHoursToDate(new Date(), 24);
     if (buscar === '') {
         const alerta = await Alerta.findAll({
             where: {
-              fecha:fechaAnterior,
-              fecha
+              [Op.or]: [
+                { fecha: fechaAnterior },
+                { fecha: fecha }
+              ]
             },
             include:[
                 {
@@ -58,8 +60,10 @@ const getFiltroAlertas = async (req = request, res = response) => {
     }
     const alerta = await Alerta.findAll({
         where: {
-            fecha:fechaAnterior,
-            fecha
+          [Op.or]: [
+            { fecha: fechaAnterior },
+            { fecha: fecha }
+          ]
         },
         include: [
           {
@@ -132,6 +136,7 @@ const filtroAlerta = async (req = request, res = response) => {
       ok: true,
       msg: "Se muestran las alertas con exito",
       results,
+      fechaAnter
     });
   } catch (error) {
     res.status(400).json({
