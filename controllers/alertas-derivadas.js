@@ -1,6 +1,6 @@
 const { request, response } = require("express");
-const { AlertaDerivada, Alerta, Usuario, Ciudadano } = require("../models");
-
+const { AlertaDerivada, Alerta, Usuario, Ciudadano, TipoAlerta } = require("../models");
+const { Op } = require("sequelize");
 
 
 const getAlertaDerivadas=async (req = request, res = response) =>{
@@ -44,12 +44,19 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
         const alertaDerivada = await AlertaDerivada.findAll(
             {
                 where:{
-                    id_usuario:id,
-                    atencion:0
+                    [Op.and]: [
+                        { id_usuario: id },
+                        { atencion:0}
+                      ]  
                 },
                 include:[
                     {
-                        model:Alerta
+                        model:Alerta,
+                        include:[
+                            {
+                                model:TipoAlerta
+                            }
+                        ]
                     },
                     {
                         model:Usuario
