@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 
 
 const actualizarAlertaCiudadano = ( cliente= Socket, io= socketIO.Server ) => {
-    cliente.on('actualizar-alerta-ciudadano',(token='')=>{
-        cliente.emit('actualizar-alerta-ciudadano',token)
+    cliente.on('actualizar-alerta-ciudadano',(token='', callback)=>{
+        cliente.emit('actualizar-alerta-ciudadano',token);
+        cliente.broadcast.emit('actualizar-alerta-general')
     })
 }
-
 module.exports = {
     actualizarAlertaCiudadano
 }

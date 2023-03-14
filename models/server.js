@@ -4,9 +4,11 @@ const fileUpload = require('express-fileupload');
 const http = require('http');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser')
-const { conectarCliente } = require('../sockets/usuario-socket');
 const sequelize = require('../database/database');
+/* Conexion Sockets */
+const { conectarCliente } = require('../sockets/usuario-socket');
 const { actualizarAlertaCiudadano } = require('../sockets/alertas-socket');
+const { AlertaDerivadaSocket } = require('../sockets/alerta-derivada-socket');
 
 class Server{
     static _intance=Server;
@@ -66,6 +68,7 @@ class Server{
             console.log('Cliente conectado');
             conectarCliente(cliente, this.io);
             actualizarAlertaCiudadano(cliente,this.io);
+            AlertaDerivadaSocket(cliente,this.io);
         })
     }
     middlewares(){
