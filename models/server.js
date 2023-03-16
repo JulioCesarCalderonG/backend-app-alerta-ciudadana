@@ -33,7 +33,8 @@ class Server{
             uploadgeneral:'/api/uploadgeneral',
             centroatencion:'/api/centroatencion',
             opcionfoto:'/api/opcionfoto',
-            alertaderivada:'/api/alertaderivada'
+            alertaderivada:'/api/alertaderivada',
+            politicaprivacidad:'/api/politicaprivacidad'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -110,6 +111,7 @@ class Server{
         this.app.use(this.paths.centroatencion, require('../routes/centro-atencion'));
         this.app.use(this.paths.opcionfoto, require('../routes/opcion-foto'));
         this.app.use(this.paths.alertaderivada, require('../routes/alertas-derivadas'));
+        this.app.use(this.paths.politicaprivacidad, require('../routes/politicas-privacidad'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */
