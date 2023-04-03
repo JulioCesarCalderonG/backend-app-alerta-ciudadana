@@ -11,8 +11,17 @@ const politicaPrivacidad = (req=request,res=response)=>{
       );
       return res.sendFile(pathImagen);
 }
+const poderJudicial = (req=request,res=response)=>{
+    const pathImagen = path.join(
+        __dirname,
+        "../assets",
+        "CUADROARANCELES.pdf",
+      );
+      return res.sendFile(pathImagen);
+}
 
 
 module.exports ={ 
-    politicaPrivacidad
+    politicaPrivacidad,
+    poderJudicial
 }
