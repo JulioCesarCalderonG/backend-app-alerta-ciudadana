@@ -55,6 +55,9 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                         include:[
                             {
                                 model:TipoAlerta
+                            },
+                            {
+                                model:Ciudadano
                             }
                         ]
                     },
