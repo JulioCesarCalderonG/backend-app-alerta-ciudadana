@@ -7,7 +7,7 @@ const { validarCampos, validarArchivoSubir, validarJWT, validarJWTParams } = req
 const router = Router();
 
 /* Actualizar Tipo Atencion */
-router.get('/tipo-atencion/:id',mostrarTipoAtencion);
+router.get('/tipo-atencion/:imagen/:id',mostrarTipoAtencion);
 router.put('/tipo-atencion/:id',[
     validarArchivoSubir,
     validarCampos

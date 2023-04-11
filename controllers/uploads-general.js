@@ -13,10 +13,8 @@ const mostrarTipoAtencion = async (req = request, res = response) => {
       },
     });
     if (!resp) {
-      return res.json({
-        ok: false,
-        msg: "no se encuentra el tipo de atencion",
-      });
+      const pathImagenDefault = path.join(__dirname, "../assets/no-image.png");
+      return res.sendFile(pathImagenDefault);
     }
     if (resp.img) {
       const pathImagen = path.join(
@@ -46,10 +44,8 @@ const mostrarTipoAlerta = async (req = request, res = response) => {
       },
     });
     if (!resp) {
-      return res.json({
-        ok: false,
-        msg: "no se encuentra el tipo de alerta",
-      });
+      const pathImagenDefault = path.join(__dirname, "../assets/no-image.png");
+      return res.sendFile(pathImagenDefault);
     }
     if (resp.img) {
       const pathImagen = path.join(
