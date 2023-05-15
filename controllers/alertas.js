@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const { subirArchivo, addHoursToDate, fechaAntes } = require("../helpers");
 const { funDate } = require("../helpers");
-const { Alerta, Ciudadano, TipoAlerta } = require("../models");
+const { Alerta, Ciudadano, TipoAlerta, DetalleCiudadano } = require("../models");
 const sequelize = require("../database/database");
 const { Op } = require("sequelize");
 const getAlertas = async (req = request, res = response) => {
@@ -50,6 +50,10 @@ const getFiltroAlertas = async (req = request, res = response) => {
                 {
                     model:Ciudadano
                 }
+            ],
+            order:[
+              ['fecha','DESC'],
+              ['hora','DESC']
             ]
           });
           return res.json({
@@ -82,6 +86,10 @@ const getFiltroAlertas = async (req = request, res = response) => {
             model:Ciudadano
           }
         ],
+        order:[
+          ['fecha','DESC'],
+          ['hora','DESC']
+        ]
       });
     return  res.json({
       ok: true,
@@ -147,8 +155,29 @@ const filtroAlerta = async (req = request, res = response) => {
 };
 const getAlerta = async (req = request, res = response) => {
   try {
+    const {id}= req.params;
+    const alerta = await Alerta.findOne({
+      where:{
+        id
+      },
+      include:[
+        {
+          model:Ciudadano,
+        },
+        {
+          model:TipoAlerta
+        }
+      ]
+    });
+    const detalle = await DetalleCiudadano.findOne({
+      where:{
+        id_ciudadano:alerta.ciudadano
+      }
+    })
     res.json({
       ok: true,
+      alerta,
+      detalle
     });
   } catch (error) {
     res.status(400).json({

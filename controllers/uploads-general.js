@@ -1,8 +1,36 @@
 const { request, response } = require("express");
 const path = require("path");
 const fs = require("fs");
-const { TipoAtencion, TipoAlerta, DetalleCiudadano } = require("../models");
+const { TipoAtencion, TipoAlerta, DetalleCiudadano, Alerta } = require("../models");
 const { subirArchivo } = require("../helpers");
+
+const mostrarImagenAlerta = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const resp = await Alerta.findOne({
+      where: {
+        id
+      },
+    });
+    if (!resp) {
+      const pathImagenDefault = path.join(__dirname, "../assets/no-image.png");
+      return res.sendFile(pathImagenDefault);
+    }
+    
+    if (resp.foto) {
+      const pathImagen = path.join(__dirname,"../uploads","alertas",resp.foto);
+      return res.sendFile(pathImagen);
+    }
+      const pathImagenDefault = path.join(__dirname, "../assets/no-image.png");
+      return res.sendFile(pathImagenDefault); 
+    
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
 
 const mostrarTipoAtencion = async (req = request, res = response) => {
   try {
@@ -228,6 +256,7 @@ const putUploadCiudadano = async (req = request, res = response) => {
   }
 };
 module.exports = {
+  mostrarImagenAlerta,
   putUploadTipoAtencion,
   mostrarTipoAtencion,
   putUploadTipoAlerta,
