@@ -217,18 +217,13 @@ const postAlerta = async (req = request, res = response) => {
     const { ...data } = req.body;
     const { hora, fecha } = funDate();
     const ciudadano = req.ciudadanoToken;
-    if (req.files) {
-      const file = req.files;
-      const foto = await subirArchivo(file, undefined, "alertas");
-      data.foto = foto;
-    }
     data.fecha = fecha;
     data.hora = hora;
     data.ciudadano = ciudadano.id;
     const alerta = await Alerta.create(data);
     res.json({
       ok: true,
-      msg: `Se envio la alerta ciudadana, la patrulla esta en camino`,
+      msg: `Se envio la alerta ciudadana, se contactaran con usted`,
       alerta,
     });
   } catch (error) {

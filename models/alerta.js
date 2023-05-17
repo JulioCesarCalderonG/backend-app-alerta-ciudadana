@@ -6,17 +6,11 @@ class Alerta extends Model{};
 
 
 Alerta.init({
-    descripcion:{
-        type:DataTypes.TEXT
-    },
     lat:{
         type:DataTypes.FLOAT
     },
     lng:{
         type:DataTypes.FLOAT
-    },
-    foto:{
-        type:DataTypes.STRING
     },
     fecha:{
         type:DataTypes.CHAR
@@ -26,13 +20,6 @@ Alerta.init({
     },
     ciudadano:{
         type:DataTypes.INTEGER
-    },
-    tipo_alerta:{
-        type:DataTypes.INTEGER
-    },
-    derivado:{
-        type:DataTypes.TINYINT,
-        defaultValue:0
     }
 },{
     sequelize,
