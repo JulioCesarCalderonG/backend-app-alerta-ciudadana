@@ -1,9 +1,22 @@
 const { request, response } = require("express");
 const sunatApi = require("../api-sunat/apiSunat");
+const {Ciudadano} = require("../models");
 
 const validarDNISunat = async (req = request, res = response) => {
   try {
     const { dni } = req.body;
+    const ciudadano= await Ciudadano.findOne({
+      where:{
+        dni
+      }
+    });
+    if (ciudadano) {
+      return res.json({
+        ok:false,
+        msg:'Usted ya se registro, inicie sesion en el login o recupere su contraseña segun sea el caso',
+        datos:null
+      })
+    }
     const datos = {};
     const { data } = await sunatApi.get("/v1/dni", {
       params: {
@@ -14,7 +27,7 @@ const validarDNISunat = async (req = request, res = response) => {
     datos.apellido =`${data.apellidoPaterno} ${data.apellidoMaterno}`;
     datos.dni=dni;
     
-    res.json({
+    return res.json({
       ok: true,
       msg:`Se valido los datos del DNI correctamente`,
       datos
