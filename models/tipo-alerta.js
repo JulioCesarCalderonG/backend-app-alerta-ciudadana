@@ -30,7 +30,7 @@ TipoAlerta.init({
     timestamps:false
 });
 
-TipoAlerta.hasMany(Alerta,{
+/* TipoAlerta.hasMany(Alerta,{
     as:'alertaTipoAlerta',
     foreignKey:'tipo_alerta'
 });
@@ -39,7 +39,7 @@ Alerta.belongsTo(TipoAlerta,{
     foreignKey:'tipo_alerta',
     sourceKey:'id'
 })
-
+ */
 
 
 module.exports = TipoAlerta

@@ -12,9 +12,6 @@ const getAlertas = async (req = request, res = response) => {
         {
           model: Ciudadano,
         },
-        {
-          model: TipoAlerta,
-        },
       ],
     });
     res.json({
@@ -45,9 +42,6 @@ const getFiltroAlertas = async (req = request, res = response) => {
             },
             include:[
                 {
-                    model:TipoAlerta
-                },
-                {
                     model:Ciudadano
                 }
             ],
@@ -71,7 +65,7 @@ const getFiltroAlertas = async (req = request, res = response) => {
         },
         include: [
           {
-            model: TipoAlerta,
+            model: Ciudadano,
             where: {
               [Op.or]: [
                 {
@@ -81,9 +75,6 @@ const getFiltroAlertas = async (req = request, res = response) => {
                 },
               ],
             },
-          },
-          {
-            model:Ciudadano
           }
         ],
         order:[
@@ -163,9 +154,6 @@ const getAlerta = async (req = request, res = response) => {
       include:[
         {
           model:Ciudadano,
-        },
-        {
-          model:TipoAlerta
         }
       ]
     });
