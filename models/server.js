@@ -10,6 +10,7 @@ const { conectarCliente } = require('../sockets/usuario-socket');
 const { actualizarAlertaCiudadano } = require('../sockets/alertas-socket');
 const { AlertaDerivadaSocket, borrarAlertaDerivada, actualizarAlertaDerivada } = require('../sockets/alerta-derivada-socket');
 const { loginUser, logoutUser } = require('../sockets/sesion-socket');
+const { registrarAlertaGenerada } = require('../sockets/alerta-registrada-socket');
 
 class Server{
     static _intance=Server;
@@ -34,7 +35,9 @@ class Server{
             centroatencion:'/api/centroatencion',
             opcionfoto:'/api/opcionfoto',
             alertaderivada:'/api/alertaderivada',
-            politicaprivacidad:'/api/politicaprivacidad'
+            politicaprivacidad:'/api/politicaprivacidad',
+            alertagenerada:'/api/alertagenerada',
+            grafica:'/api/grafica'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -75,6 +78,7 @@ class Server{
             borrarAlertaDerivada(cliente, this.io);
             loginUser(cliente,this.io)
             logoutUser(cliente,this.io);
+            registrarAlertaGenerada(cliente,this.io)
             
         })
     }
@@ -111,6 +115,8 @@ class Server{
         this.app.use(this.paths.centroatencion, require('../routes/centro-atencion'));
         this.app.use(this.paths.opcionfoto, require('../routes/opcion-foto'));
         this.app.use(this.paths.alertaderivada, require('../routes/alertas-derivadas'));
+        this.app.use(this.paths.alertagenerada, require('../routes/alertas-generadas'));
+        this.app.use(this.paths.grafica, require('../routes/grafica'));
         this.app.use(this.paths.politicaprivacidad, require('../routes/politicas-privacidad'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));

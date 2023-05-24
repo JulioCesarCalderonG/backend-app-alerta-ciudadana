@@ -1,4 +1,4 @@
-const { Ciudadano, TipoAlerta, Usuario, TipoAtencion, AlertaDerivada } = require("../models")
+const { Ciudadano, TipoAlerta, Usuario, TipoAtencion, AlertaDerivada, AlertaGenerada, Alerta } = require("../models")
 
 
 
@@ -60,11 +60,24 @@ const alertaDerivada= async(id_alerta='')=>{
     }
 }
 
+const alertaGenerada = async(id_alerta='')=>{
+    const resp = await Alerta.findOne({
+        where:{
+            id:id_alerta,
+            registrado:1
+        }
+    });
+
+    if (resp) {
+        throw new Error(`La alerta ya ha sido registrado`);
+    }
+}
 
 module.exports = {
     validarDNICiudadano,
     nombreTipoAlerta,
     validarDNIUsuario,
     nombreTipoAtencion,
-    alertaDerivada
+    alertaDerivada,
+    alertaGenerada
 }

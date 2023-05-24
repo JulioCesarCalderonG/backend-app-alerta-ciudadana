@@ -10,6 +10,7 @@ const Usuario = require("./usuario");
 const TipoAtencion= require("./tipo-atencion");
 const CentroAtencion = require("./centro-atencion");
 const AlertaDerivada = require("./alerta-derivada");
+const AlertaGenerada = require("./alerta-generada");
 module.exports = {
   Server,
   Ciudadano,
@@ -21,5 +22,6 @@ module.exports = {
   Usuario,
   TipoAtencion,
   CentroAtencion,
-  AlertaDerivada
+  AlertaDerivada,
+  AlertaGenerada
 };

@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 const AlertaDerivada = require("./alerta-derivada");
+const AlertaGenerada = require("./alerta-generada");
 
 class Alerta extends Model{};
 
@@ -20,6 +21,16 @@ Alerta.init({
     },
     ciudadano:{
         type:DataTypes.INTEGER
+    },
+    registrado:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
+    },
+    ano:{
+        type:DataTypes.CHAR
+    },
+    mes:{
+        type:DataTypes.CHAR 
     }
 },{
     sequelize,
@@ -32,6 +43,16 @@ Alerta.hasOne(AlertaDerivada,{
     foreignKey:'id_alerta'
 });
 AlertaDerivada.belongsTo(Alerta,{
+    foreignKey:'id_alerta',
+    sourceKey:'id'
+});
+
+/* Relacion Alerta Generada Alerta */
+Alerta.hasOne(AlertaGenerada,{
+    as:'FK_AlertaGeneradaTipoAlerta',
+    foreignKey:'id_alerta'
+});
+AlertaGenerada.belongsTo(Alerta,{
     foreignKey:'id_alerta',
     sourceKey:'id'
 })

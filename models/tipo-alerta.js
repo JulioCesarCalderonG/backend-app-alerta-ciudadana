@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
-const Alerta = require("./alerta");
+const AlertaGenerada = require("./alerta-generada");
 
 class TipoAlerta extends Model{};
 
@@ -29,6 +29,16 @@ TipoAlerta.init({
     tableName:'tipo_alertas',
     timestamps:false
 });
+
+TipoAlerta.hasMany(AlertaGenerada,{
+    as:'FK_AlertaDerivadaAlertas',
+    foreignKey:'id_tipo_alerta'
+});
+
+AlertaGenerada.belongsTo(TipoAlerta,{
+    foreignKey:'id_tipo_alerta',
+    sourceKey:'id'
+})
 
 /* TipoAlerta.hasMany(Alerta,{
     as:'alertaTipoAlerta',

@@ -1,9 +1,14 @@
-const { request, response } = require("express");
-const { subirArchivo, addHoursToDate, fechaAntes } = require("../helpers");
-const { funDate } = require("../helpers");
-const { Alerta, Ciudadano, TipoAlerta, DetalleCiudadano } = require("../models");
-const sequelize = require("../database/database");
-const { Op } = require("sequelize");
+const { request, response } = require('express');
+const { subirArchivo, addHoursToDate, fechaAntes } = require('../helpers');
+const { funDate } = require('../helpers');
+const {
+  Alerta,
+  Ciudadano,
+  TipoAlerta,
+  DetalleCiudadano,
+} = require('../models');
+const sequelize = require('../database/database');
+const { Op } = require('sequelize');
 const getAlertas = async (req = request, res = response) => {
   try {
     const data = req.body;
@@ -30,62 +35,56 @@ const getAlertas = async (req = request, res = response) => {
 const getFiltroAlertas = async (req = request, res = response) => {
   try {
     const { buscar } = req.query;
-    const { fecha,hora } = funDate();
+    const { fecha, hora } = funDate();
     const fechaAnterior = addHoursToDate(new Date(), 24);
     if (buscar === '') {
-        const alerta = await Alerta.findAll({
-            where: {
-              [Op.or]: [
-                { fecha: fechaAnterior },
-                { fecha: fecha }
-              ]
-            },
-            include:[
-                {
-                    model:Ciudadano
-                }
-            ],
-            order:[
-              ['fecha','DESC'],
-              ['hora','DESC']
-            ]
-          });
-          return res.json({
-            ok: true,
-            msg: "Se han mostrado las alertas con exito",
-            alerta
-          });
-    }
-    const alerta = await Alerta.findAll({
+      const alerta = await Alerta.findAll({
         where: {
-          [Op.or]: [
-            { fecha: fechaAnterior },
-            { fecha: fecha }
-          ]
+          [Op.or]: [{ fecha: fechaAnterior }, { fecha: fecha }],
         },
         include: [
           {
             model: Ciudadano,
-            where: {
-              [Op.or]: [
-                {
-                  nombre: {
-                    [Op.startsWith]: `%${buscar}%`,
-                  },
-                },
-              ],
-            },
-          }
+          },
         ],
-        order:[
-          ['fecha','DESC'],
-          ['hora','DESC']
-        ]
+        order: [
+          ['fecha', 'DESC'],
+          ['hora', 'DESC'],
+        ],
       });
-    return  res.json({
+      return res.json({
+        ok: true,
+        msg: 'Se han mostrado las alertas con exito',
+        alerta,
+      });
+    }
+    const alerta = await Alerta.findAll({
+      where: {
+        [Op.or]: [{ fecha: fechaAnterior }, { fecha: fecha }],
+      },
+      include: [
+        {
+          model: Ciudadano,
+          where: {
+            [Op.or]: [
+              {
+                nombre: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+            ],
+          },
+        },
+      ],
+      order: [
+        ['fecha', 'DESC'],
+        ['hora', 'DESC'],
+      ],
+    });
+    return res.json({
       ok: true,
-      msg: "Se han mostrado las alertas con exito",
-      alerta
+      msg: 'Se han mostrado las alertas con exito',
+      alerta,
     });
   } catch (error) {
     res.status(400).json({
@@ -100,42 +99,45 @@ const filtroAlerta = async (req = request, res = response) => {
     const { fechaUno, fechaDos, tipoAlerta } = req.body;
     const fechaAnter = addHoursToDate(new Date(), 24);
     const { fecha } = funDate();
-    let consulta = "";
+    let consulta = '';
     switch (tipo) {
-      case "1":
+      case '1':
         consulta = `
-                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id  order by fecha desc
+                select R.id, R.descripcion, R.fecha, R.hora, A.lat,A.lng, T.nombre as tipo_alerta, T.img, T.color, C.nombre, C.apellido
+                from alerta_generada R inner join alertas A on R.id_alerta = A.id inner join tipo_alertas T on R.id_tipo_alerta= T.id inner join ciudadano C on A.ciudadano = C.id 
+                order by R.fecha, R.hora desc
                 `;
         break;
-      case "2":
+      case '2':
         consulta = `
-                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where fecha>='${fechaUno}' AND fecha<='${fechaDos}' order by fecha desc
+                select R.id, R.descripcion, R.fecha, R.hora, A.lat,A.lng, T.nombre as tipo_alerta, T.img, T.color, C.nombre, C.apellido
+                from alerta_generada R inner join alertas A on R.id_alerta = A.id inner join tipo_alertas T on R.id_tipo_alerta= T.id inner join ciudadano C on A.ciudadano = C.id 
+                where R.fecha>='${fechaUno}' AND R.fecha<='${fechaDos}' order by R.fecha, R.hora desc
                 `;
         break;
-      case "3":
+      case '3':
         consulta = `
-                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where tipo_alerta='${tipoAlerta}  order by fecha desc'
+                select R.id, R.descripcion, R.fecha, R.hora, A.lat,A.lng, T.nombre as tipo_alerta, T.img, T.color, C.nombre, C.apellido
+                from alerta_generada R inner join alertas A on R.id_alerta = A.id inner join tipo_alertas T on R.id_tipo_alerta= T.id inner join ciudadano C on A.ciudadano = C.id 
+                where R.id_tipo_alerta='${tipoAlerta}  order by R.fecha, R.hora desc'
                 `;
         break;
-      case "4":
+      case '4':
         consulta = `
-                select A.id, A.descripcion, A.foto, A.lat,A.lng,A.foto,A.fecha,A.hora, A.derivado, C.dni, C.nombre, C.apellido, T.id as 'id_tipo', T.nombre as 'nombre_tipo', T.color
-                from alertas A inner join ciudadano C on A.ciudadano = C.id inner join tipo_alertas T on A.tipo_alerta = T.id where fecha>='${fechaAnter}' AND fecha<='${fecha}' order by fecha desc
+                select R.id, R.descripcion, R.fecha, R.hora, A.lat,A.lng, T.nombre as tipo_alerta, T.img, T.color, C.nombre, C.apellido
+                from alerta_generada R inner join alertas A on R.id_alerta = A.id inner join tipo_alertas T on R.id_tipo_alerta= T.id inner join ciudadano C on A.ciudadano = C.id 
+                where fecha>='${fechaAnter}' AND fecha<='${fecha}' order by fecha desc
                 `;
         break;
       default:
-        consulta = "select* from alertas";
+        consulta = 'select* from alerta_generada';
         break;
     }
     const [results, metadata] = await sequelize.query(consulta);
     res.json({
       ok: true,
-      msg: "Se muestran las alertas con exito",
+      msg: 'Se muestran las alertas con exito',
       results,
-      fechaAnter
     });
   } catch (error) {
     res.status(400).json({
@@ -146,26 +148,26 @@ const filtroAlerta = async (req = request, res = response) => {
 };
 const getAlerta = async (req = request, res = response) => {
   try {
-    const {id}= req.params;
+    const { id } = req.params;
     const alerta = await Alerta.findOne({
-      where:{
-        id
+      where: {
+        id,
       },
-      include:[
+      include: [
         {
-          model:Ciudadano,
-        }
-      ]
+          model: Ciudadano,
+        },
+      ],
     });
     const detalle = await DetalleCiudadano.findOne({
-      where:{
-        id_ciudadano:alerta.ciudadano
-      }
-    })
+      where: {
+        id_ciudadano: alerta.ciudadano,
+      },
+    });
     res.json({
       ok: true,
       alerta,
-      detalle
+      detalle,
     });
   } catch (error) {
     res.status(400).json({
@@ -203,11 +205,13 @@ const getAlertaCiudadano = async (req = request, res = response) => {
 const postAlerta = async (req = request, res = response) => {
   try {
     const { ...data } = req.body;
-    const { hora, fecha } = funDate();
+    const { hora, fecha,ano,mes } = funDate();
     const ciudadano = req.ciudadanoToken;
     data.fecha = fecha;
     data.hora = hora;
     data.ciudadano = ciudadano.id;
+    data.ano=ano;
+    data.mes=mes;
     const alerta = await Alerta.create(data);
     res.json({
       ok: true,
