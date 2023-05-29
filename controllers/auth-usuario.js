@@ -1,11 +1,12 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
-const {generarJWT, generarJWTUsuario} = require("../helpers");
-const { Usuario, Cargo } = require("../models");
+const {generarJWT, generarJWTUsuario, funDate} = require("../helpers");
+const { Usuario, Cargo, ControlPersonal } = require("../models");
 
 const authUsuario = async (req = request, res = response) => {
   try {
     const { password, dni } = req.body;
+    const {fecha,hora}= funDate();
     const resp = await Usuario.findOne({
       where: {
         dni
@@ -46,12 +47,19 @@ const authUsuario = async (req = request, res = response) => {
         id:resp.id
       }
     });
+    const enviPersonal= {
+      id_usuario:resp.id,
+      fechaingreso:fecha,
+      horaingreso:hora
+    }
+    const cpersonal = await ControlPersonal.create(enviPersonal);
     token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
     res.json({
         ok: true,
         msg: "Login correcto",
         usuario:resp,
         token,
+        id_control:cpersonal.id
       });
   } catch (error) {
     res.status(400).json({
@@ -63,6 +71,8 @@ const authUsuario = async (req = request, res = response) => {
 const logoutUsuario = async (req = request, res = response)=>{
   try {
     const {id} = req.usuarioToken;
+    const {control} =req.query;
+    const {fecha,hora} = funDate();
     const usuario = await Usuario.update({
       disponible:0
     },{
@@ -70,7 +80,15 @@ const logoutUsuario = async (req = request, res = response)=>{
         id
       }
     });
-
+    const datacontrol = {
+      fechasalida:fecha,
+      horasalida:hora
+    }
+    const resp = await ControlPersonal.update(datacontrol,{
+      where:{
+        id:control
+      }
+    })
     res.json({
       ok:true,
       msg:'Se cerro sesion del usuario',

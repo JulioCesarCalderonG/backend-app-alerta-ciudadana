@@ -37,7 +37,9 @@ class Server{
             alertaderivada:'/api/alertaderivada',
             politicaprivacidad:'/api/politicaprivacidad',
             alertagenerada:'/api/alertagenerada',
-            grafica:'/api/grafica'
+            controlpersonal:'/api/controlpersonal',
+            grafica:'/api/grafica',
+            reporte:'/api/reporte'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -116,7 +118,9 @@ class Server{
         this.app.use(this.paths.opcionfoto, require('../routes/opcion-foto'));
         this.app.use(this.paths.alertaderivada, require('../routes/alertas-derivadas'));
         this.app.use(this.paths.alertagenerada, require('../routes/alertas-generadas'));
+        this.app.use(this.paths.controlpersonal, require('../routes/control-personal'));
         this.app.use(this.paths.grafica, require('../routes/grafica'));
+        this.app.use(this.paths.reporte, require('../routes/reportes'));
         this.app.use(this.paths.politicaprivacidad, require('../routes/politicas-privacidad'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
