@@ -12,7 +12,6 @@ router.get('/:id',getTipoAlerta);
 router.get('/mostrar/imagen/:ciudadano/:id',mostrarImagenTipoAlerta)
 router.post('/',[
     check('nombre').custom(nombreTipoAlerta),
-    validarArchivoSubir,
     validarCampos
 ],postTipoAlerta);
 router.put('/:id',putTipoAlerta);

@@ -86,15 +86,8 @@ const mostrarImagenTipoAlerta = async (req = request, res = response) => {
 const postTipoAlerta = async (req = request, res = response) => {
   try {
     const { nombre, opcion, ...data } = req.body;
-    const file = req.files;
-    const img = await subirArchivo(
-      file,
-      ["png", "jpg", "jpeg", "gif"],
-      "tipos-alertas"
-    );
+  
     data.nombre = nombre.toUpperCase();
-    data.img = img;
-    data.opcion_foto=opcion;
     const tipoalerta = await TipoAlerta.create(data);
     res.json({
       ok: true,
