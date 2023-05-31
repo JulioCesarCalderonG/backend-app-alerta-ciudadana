@@ -22,4 +22,6 @@ router.post("",[
 ], postAlertaDerivada);
 router.put("/:id", putAlertaDerivada);
 router.delete("/:id", deleteAlertaDerivada);
+
+
 module.exports = router;
