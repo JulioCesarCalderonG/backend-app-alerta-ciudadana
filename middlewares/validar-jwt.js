@@ -24,16 +24,16 @@ const validarJWT =async (req= request, res = response, next)=>{
         if (!ciudadano) {
             return res.json({
                 ok:false,
-                msg: 'Token no valido - ciudadano no existe en BD',
+                msg: 'Token no valido - usted ha sido bloqueado por la MPCP',
                 ciudadano:null,
                 token:null
             })
         }
         // Verificar si el uid tiene estado en tru
-        if (!ciudadano.estado) {
+        if (ciudadano.estado===0) {
             return res.json({
                 ok:false,
-                msg: 'Token no valido - ciudadano no existe en BD',
+                msg: 'Token no valido - usted ha sido bloqueado por la MPCP',
                 ciudadano:null,
                 token:null
             })
@@ -123,7 +123,7 @@ const validarJWTUsuario =async (req= request, res = response, next)=>{
             })
         }
         // Verificar si el uid tiene estado en tru
-        if (!usuario.estado) {
+        if (usuario.estado===0) {
             return res.json({
                 ok:false,
                 msg: 'Token no valido - usuario no existe en BD',
