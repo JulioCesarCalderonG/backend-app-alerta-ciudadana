@@ -1,4 +1,3 @@
-const { Welcome } = require("../models");
 const transport = require('../mail/mailer');
 const enviarWelcome = async (email='', token='') => {
 
