@@ -102,18 +102,56 @@ const validarJWTUsuario =async (req= request, res = response, next)=>{
             msg: 'No hay token en la peticion'
         })
     }
-
     try {
         const {id} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-
         // leer el usuario
-
         const usuario = await Usuario.findOne({
             where:{
                 id
             }
         });
-
+        if (!usuario) {
+            return res.json({
+                ok:false,
+                msg: 'Token no valido - usuario no existe en BD',
+                usuario:null,
+                token:null
+            })
+        }
+        // Verificar si el uid tiene estado en tru
+        if (usuario.estado===0) {
+            return res.json({
+                ok:false,
+                msg: 'Token no valido - usuario no existe en BD',
+                usuario:null,
+                token:null
+            })
+        }
+        req.usuarioToken = usuario;
+        next();
+    } catch (error) {
+        res.status(401).json({
+            msg: 'Token no valido'
+        })
+    }
+    
+    
+}
+const validarJWTUsuarioParams =async (req= request, res = response, next)=>{ 
+    const token = req.header('token');
+    if (!token) {
+        return res.status(401).json({
+            msg: 'No hay token en la peticion'
+        })
+    }
+    try {
+        const {id} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        // leer el usuario
+        const usuario = await Usuario.findOne({
+            where:{
+                id
+            }
+        });
         if (!usuario) {
             return res.json({
                 ok:false,
@@ -144,5 +182,6 @@ const validarJWTUsuario =async (req= request, res = response, next)=>{
 module.exports = {
     validarJWT,
     validarJWTUsuario,
-    validarJWTParams
+    validarJWTParams,
+    validarJWTUsuarioParams
 }

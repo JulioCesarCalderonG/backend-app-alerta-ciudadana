@@ -31,6 +31,14 @@ const authUsuario = async (req = request, res = response) => {
         token: null,
       });
     }
+    if (resp.Cargo.cargo==='UN') {
+      return res.json({
+        ok: false,
+        msg: "Usted no es un usuario administrador",
+        user: null,
+        token: null,
+      });
+    }
     validarPassword = bcryptjs.compareSync(password, resp.password);
     if (!validarPassword) {
       return res.json({
@@ -60,6 +68,72 @@ const authUsuario = async (req = request, res = response) => {
         usuario:resp,
         token,
         id_control:cpersonal.id
+      });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+};
+const authUsuarioSerenazgo = async (req = request, res = response) => {
+  try {
+    const { password, dni } = req.body;
+    const {fecha,hora}= funDate();
+    const resp = await Usuario.findOne({
+      where: {
+        dni
+      },
+      include:{
+        model:Cargo
+      }
+    });
+    if (!resp) {
+      return res.json({
+        ok: false,
+        msg: "Usuario no registrado, converse con el administrador",
+        user: null,
+        token: null,
+      });
+    }
+    if (!resp.estado) {
+      return res.json({
+        ok: false,
+        msg: "Usuario bloqueado, converse con el administrador",
+        user: null,
+        token: null,
+      });
+    }
+    if (resp.Cargo.cargo==='UA') {
+      return res.json({
+        ok: false,
+        msg: "Usted no es un usuario serenazgo",
+        user: null,
+        token: null,
+      });
+    }
+    validarPassword = bcryptjs.compareSync(password, resp.password);
+    if (!validarPassword) {
+      return res.json({
+        ok: false,
+        msg: "Contraseña no valida",
+        user: null,
+        token: null,
+      });
+    }
+    const usuario = await Usuario.update({
+      disponible:1
+    },{
+      where:{
+        id:resp.id
+      }
+    });
+    token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
+    res.json({
+        ok: true,
+        msg: "Login correcto",
+        usuario:resp,
+        token
       });
   } catch (error) {
     res.status(400).json({
@@ -101,6 +175,28 @@ const logoutUsuario = async (req = request, res = response)=>{
     });
   }
 }
+const logoutUsuarioSerenazgo = async (req = request, res = response)=>{
+  try {
+    const {id} = req.usuarioToken;
+    const usuario = await Usuario.update({
+      disponible:0
+    },{
+      where:{
+        id
+      }
+    });
+    res.json({
+      ok:true,
+      msg:'Se cerro sesion del usuario',
+      usuario
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+}
 const validarTokenUsuario = async (req = request, res = response) => {
   try {
     const user = req.usuarioToken;
@@ -120,5 +216,7 @@ const validarTokenUsuario = async (req = request, res = response) => {
 module.exports = {
   authUsuario,
   logoutUsuario,
-  validarTokenUsuario
+  logoutUsuarioSerenazgo,
+  validarTokenUsuario,
+  authUsuarioSerenazgo
 };
