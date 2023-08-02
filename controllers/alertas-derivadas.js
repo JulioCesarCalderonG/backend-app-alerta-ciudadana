@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { AlertaDerivada, Alerta, Usuario, Ciudadano, TipoAlerta } = require("../models");
+const { AlertaDerivada, Alerta, Usuario, Ciudadano, TipoAlerta, DetalleCiudadano } = require("../models");
 const { Op } = require("sequelize");
 
 
@@ -43,6 +43,7 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
         const {id} = req.usuarioToken;
         const alertaDerivada = await AlertaDerivada.findAll(
             {
+                attributes:['id'],
                 where:{
                     [Op.and]: [
                         { id_usuario: id },
@@ -54,7 +55,7 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                         model:Alerta,
                         include:[
                             {
-                                model:Ciudadano
+                                model:Ciudadano,
                             }
                         ]
                     },
@@ -64,10 +65,29 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                 ]
             }
         );
+        let array=[];
+        if (alertaDerivada) {
+            for (let i = 0; i < alertaDerivada.length; i++) {
+                //const opt={};
+                const resp = await DetalleCiudadano.findOne({
+                    where:{
+                        id_ciudadano:alertaDerivada[i].Alertum.ciudadano
+                    }
+                });
+                const opt={
+                    id:alertaDerivada[i].id,
+                    Alertum:alertaDerivada[i].Alertum,
+                    Usuario:alertaDerivada[i].Usuario,
+                    detalle:resp
+                }
+                array.push(opt)    
+            }
+        }
+
         res.json({
             ok:true,
             msg:'Se muestran las alertas derivadas con exito',
-            alertaDerivada
+            alertaDerivada:array
         })
     } catch (error) {
         res.status(400).json({
