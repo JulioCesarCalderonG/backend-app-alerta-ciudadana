@@ -22,8 +22,18 @@ const borrarAlertaDerivada = ( cliente= Socket, io= socketIO.Server ) => {
     });
 }
 
+const atenderAlertaDerivada = ( cliente= Socket, io= socketIO.Server ) => {
+    cliente.on('atender-alerta-derivada',()=>{
+        cliente.emit('atender-alerta-derivada');
+    });
+}
+
+
+
+
 module.exports = {
     AlertaDerivadaSocket,
     actualizarAlertaDerivada,
-    borrarAlertaDerivada
+    borrarAlertaDerivada,
+    atenderAlertaDerivada
 }

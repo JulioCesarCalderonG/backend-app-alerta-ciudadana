@@ -8,7 +8,7 @@ const sequelize = require('../database/database');
 /* Conexion Sockets */
 const { conectarCliente } = require('../sockets/usuario-socket');
 const { actualizarAlertaCiudadano } = require('../sockets/alertas-socket');
-const { AlertaDerivadaSocket, borrarAlertaDerivada, actualizarAlertaDerivada } = require('../sockets/alerta-derivada-socket');
+const { AlertaDerivadaSocket, borrarAlertaDerivada, actualizarAlertaDerivada, atenderAlertaDerivada } = require('../sockets/alerta-derivada-socket');
 const { loginUser, logoutUser } = require('../sockets/sesion-socket');
 const { registrarAlertaGenerada } = require('../sockets/alerta-registrada-socket');
 
@@ -78,10 +78,10 @@ class Server{
             AlertaDerivadaSocket(cliente,this.io);
             actualizarAlertaDerivada(cliente,this.io)
             borrarAlertaDerivada(cliente, this.io);
-            loginUser(cliente,this.io)
+            loginUser(cliente,this.io);
             logoutUser(cliente,this.io);
-            registrarAlertaGenerada(cliente,this.io)
-            
+            registrarAlertaGenerada(cliente,this.io);
+            atenderAlertaDerivada(cliente,this.io);
         })
     }
     middlewares(){
