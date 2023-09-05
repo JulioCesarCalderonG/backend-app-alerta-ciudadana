@@ -5,11 +5,46 @@ const enviarWelcome = async (email='', token='') => {
 
   try {
     const envioEmail = await transport.sendMail({
-      from: '"Gongal Soft 👻" <gongalso@gongalsoft.com>', // sender address
+      from: '"MPCP 👻" <gongalso@gongalsoft.com>', // sender address
       to: email, // list of receivers
-      subject: `Recuperacion de contraseña`, // Subject line
+      subject: `ALERTA CIUDADANA CALLERIA`, // Subject line
       //text: "Hello world?", // plain text body
-      html: `<h4>Para cambiar su contraseña porfavor, ingrese al siguiente enlace</h4><a href="http://localhost:4000/resetpassword.html?token=${token}">Cambiar Contraseña</a> `// html body
+      html: `<h4>Para cambiar su contraseña porfavor, ingrese al siguiente enlace</h4><a href="https://gongalsoft.com/resetpassword.html?token=${token}">Cambiar Contraseña</a> `// html body
+    });
+    if (!envioEmail) {
+        return {
+            ok:false,
+            resp: 'Mensaje no enviado',
+            envioEmail
+        }
+    }
+    if (envioEmail) {
+      return{
+          ok:true,
+          resp:'Mensaje enviado exitosamente',
+          envioEmail
+      }
+    }
+  } catch (error) {
+    
+    return {
+      ok:false,
+      resp: `Porfavor, verifique su conexion a internet o el correo electronico`,
+      error
+    }
+  }
+};
+const enviarCodigo = async (email='', codigo='') => {
+
+  //const welcome = await Welcome.find();
+
+  try {
+    const envioEmail = await transport.sendMail({
+      from: '"MPCP 👻" <gongalso@gongalsoft.com>', // sender address
+      to: email, // list of receivers
+      subject: `ALERTA CIUDADANA CALLERIA`, // Subject line
+      //text: "Hello world?", // plain text body
+      html: `<h4>Su codigo para la eliminacion de su cuenta es : ${codigo}</h4>`// html body
     });
     if (!envioEmail) {
         return {
@@ -36,4 +71,5 @@ const enviarWelcome = async (email='', token='') => {
 };
 module.exports = {
   enviarWelcome,
+  enviarCodigo
 };

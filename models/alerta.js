@@ -20,7 +20,7 @@ Alerta.init({
         type:DataTypes.CHAR
     },
     ciudadano:{
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     },
     registrado:{
         type:DataTypes.TINYINT,
@@ -31,6 +31,15 @@ Alerta.init({
     },
     mes:{
         type:DataTypes.CHAR 
+    },
+    dni:{
+        type:DataTypes.CHAR
+    },
+    celular:{
+        type:DataTypes.STRING
+    },
+    correo:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,

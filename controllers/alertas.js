@@ -207,9 +207,20 @@ const postAlerta = async (req = request, res = response) => {
     const { ...data } = req.body;
     const { hora, fecha,ano,mes } = funDate();
     const ciudadano = req.ciudadanoToken;
+    const detalle = await DetalleCiudadano.findOne({
+      where:{
+        id_ciudadano:ciudadano.id
+      },
+      attributes:['celular','correo']
+    });
+    if (detalle) {
+      data.celular=detalle.celular;
+      data.correo=detalle.correo;
+    }
     data.fecha = fecha;
     data.hora = hora;
-    data.ciudadano = ciudadano.id;
+    data.ciudadano = `${ciudadano.nombre} ${ciudadano.apellido}`;
+    data.dni=ciudadano.dni;
     data.ano=ano;
     data.mes=mes;
     const alerta = await Alerta.create(data);
