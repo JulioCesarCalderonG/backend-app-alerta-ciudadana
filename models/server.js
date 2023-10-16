@@ -40,7 +40,8 @@ class Server{
             controlpersonal:'/api/controlpersonal',
             grafica:'/api/grafica',
             reporte:'/api/reporte',
-            generarcodigo:'/api/generarcodigo'
+            generarcodigo:'/api/generarcodigo',
+            vehiculo:'/api/vehiculo'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -124,6 +125,8 @@ class Server{
         this.app.use(this.paths.reporte, require('../routes/reportes'));
         this.app.use(this.paths.politicaprivacidad, require('../routes/politicas-privacidad'));
         this.app.use(this.paths.generarcodigo, require('../routes/generar-codigo'));
+        this.app.use(this.paths.vehiculo, require('../routes/vehiculos'));
+
 
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));

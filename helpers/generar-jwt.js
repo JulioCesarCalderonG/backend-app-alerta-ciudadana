@@ -30,15 +30,15 @@ const generarJWTUsuario = (id = '', cargo='') =>{
         })
     })
 }
-const generarJWTUsuarioDos = (id = '') =>{
+const generarJWTUsuarioDos = (id = '', vehiculo='') =>{
     return new Promise((resolve, reject)=> {
-        const payload = {id};
+        const payload = {id,vehiculo};
         jwt.sign(payload, process.env.SECRETORPRIVATEKEY, {
             expiresIn: '1d'
         }, (err, token)=>{
             if (err) {
                 console.log(err);
-                reject('No se pudo generar el token')
+                reject('No se pudo generar el token');
             }else{
                 resolve(token);
             }

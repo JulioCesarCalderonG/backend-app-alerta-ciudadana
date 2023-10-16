@@ -145,7 +145,7 @@ const validarJWTUsuarioParams =async (req= request, res = response, next)=>{
         })
     }
     try {
-        const {id} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        const {id,vehiculo} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
         // leer el usuario
         const usuario = await Usuario.findOne({
             where:{
@@ -170,6 +170,7 @@ const validarJWTUsuarioParams =async (req= request, res = response, next)=>{
             })
         }
         req.usuarioToken = usuario;
+        req.vehiculoToken= vehiculo;
         next();
     } catch (error) {
         res.status(401).json({

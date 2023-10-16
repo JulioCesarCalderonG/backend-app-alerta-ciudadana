@@ -1,4 +1,4 @@
-const { Ciudadano, TipoAlerta, Usuario, TipoAtencion, AlertaDerivada, AlertaGenerada, Alerta } = require("../models")
+const { Ciudadano, TipoAlerta, Usuario, TipoAtencion, AlertaDerivada, AlertaGenerada, Alerta, Vehiculo } = require("../models")
 
 
 
@@ -73,11 +73,23 @@ const alertaGenerada = async(id_alerta='')=>{
     }
 }
 
+const nombreVehiculo =async(nombre='')=>{
+    const resp = await Vehiculo.findOne({
+        where:{
+            nombre
+        }
+    });
+    if (resp) {
+        throw new Error(`El vehiculo: ${nombre} ya está registrado en el sistema`);
+    }
+}
+
 module.exports = {
     validarDNICiudadano,
     nombreTipoAlerta,
     validarDNIUsuario,
     nombreTipoAtencion,
     alertaDerivada,
-    alertaGenerada
+    alertaGenerada,
+    nombreVehiculo
 }

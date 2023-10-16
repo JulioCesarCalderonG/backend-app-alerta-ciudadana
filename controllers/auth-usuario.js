@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
 const {generarJWT, generarJWTUsuario, funDate, generarJWTUsuarioDos} = require("../helpers");
-const { Usuario, Cargo, ControlPersonal } = require("../models");
+const { Usuario, Cargo, ControlPersonal, Vehiculo } = require("../models");
 
 const authUsuario = async (req = request, res = response) => {
   try {
@@ -55,6 +55,7 @@ const authUsuario = async (req = request, res = response) => {
         id:resp.id
       }
     });
+    
     const enviPersonal= {
       id_usuario:resp.id,
       fechaingreso:fecha,
@@ -76,9 +77,42 @@ const authUsuario = async (req = request, res = response) => {
     });
   }
 };
+const logoutUsuario = async (req = request, res = response)=>{
+  try {
+    const {id} = req.usuarioToken;
+    const {control} =req.query;
+    const {fecha,hora} = funDate();
+    const usuario = await Usuario.update({
+      disponible:0
+    },{
+      where:{
+        id
+      }
+    });
+    const datacontrol = {
+      fechasalida:fecha,
+      horasalida:hora
+    }
+    const resp = await ControlPersonal.update(datacontrol,{
+      where:{
+        id:control
+      }
+    })
+    res.json({
+      ok:true,
+      msg:'Se cerro sesion del usuario',
+      usuario
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`,
+    });
+  }
+}
 const authUsuarioSerenazgo = async (req = request, res = response) => {
   try {
-    const { password, dni } = req.body;
+    const { password, dni, vehiculo } = req.body;
     const {fecha,hora}= funDate();
     const resp = await Usuario.findOne({
       where: {
@@ -128,12 +162,20 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
         id:resp.id
       }
     });
-    token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
+    const vehi = await Vehiculo.update({
+      estado:0
+    },{
+      where:{
+        id:vehiculo
+      }
+    })
+    token = await generarJWTUsuarioDos(resp.id, vehiculo);
     res.json({
         ok: true,
         msg: "Login correcto",
         usuario:resp,
-        token
+        token,
+        vehiculo
       });
   } catch (error) {
     res.status(400).json({
@@ -142,42 +184,11 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
     });
   }
 };
-const logoutUsuario = async (req = request, res = response)=>{
-  try {
-    const {id} = req.usuarioToken;
-    const {control} =req.query;
-    const {fecha,hora} = funDate();
-    const usuario = await Usuario.update({
-      disponible:0
-    },{
-      where:{
-        id
-      }
-    });
-    const datacontrol = {
-      fechasalida:fecha,
-      horasalida:hora
-    }
-    const resp = await ControlPersonal.update(datacontrol,{
-      where:{
-        id:control
-      }
-    })
-    res.json({
-      ok:true,
-      msg:'Se cerro sesion del usuario',
-      usuario
-    })
-  } catch (error) {
-    res.status(400).json({
-      ok: false,
-      msg: `${error}`,
-    });
-  }
-}
+
 const logoutUsuarioSerenazgo = async (req = request, res = response)=>{
   try {
     const {id} = req.usuarioToken;
+    const vehiculo = req.vehiculoToken;
     const usuario = await Usuario.update({
       disponible:0
     },{
@@ -185,6 +196,13 @@ const logoutUsuarioSerenazgo = async (req = request, res = response)=>{
         id
       }
     });
+    const vehi = await Vehiculo.update({
+      estado:1
+    },{
+      where:{
+        id:vehiculo
+      }
+    })
     res.json({
       ok:true,
       msg:'Se cerro sesion del usuario',
@@ -201,11 +219,20 @@ const validarTokenUsuario = async (req = request, res = response) => {
   try {
     const user = req.usuarioToken;
     const token = await generarJWTUsuarioDos(user.id);
+    const vehiculo = req.vehiculoToken;
+    const vehi = await Vehiculo.update({
+      estado:0
+    },{
+      where:{
+        id:vehiculo
+      }
+    })
     res.json({
       ok: true,
       msg:'se valido el usuario con exito',
       usuario:user,
       token,
+      
     });
   } catch (error) {
     res.status(500).json({

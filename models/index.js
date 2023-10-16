@@ -12,6 +12,7 @@ const CentroAtencion = require("./centro-atencion");
 const AlertaDerivada = require("./alerta-derivada");
 const AlertaGenerada = require("./alerta-generada");
 const ControlPersonal = require("./control-personal");
+const Vehiculo = require("./vehiculo");
 module.exports = {
   Server,
   Ciudadano,
@@ -25,5 +26,6 @@ module.exports = {
   CentroAtencion,
   AlertaDerivada,
   AlertaGenerada,
-  ControlPersonal
+  ControlPersonal,
+  Vehiculo
 };
