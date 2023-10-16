@@ -41,7 +41,8 @@ class Server{
             grafica:'/api/grafica',
             reporte:'/api/reporte',
             generarcodigo:'/api/generarcodigo',
-            vehiculo:'/api/vehiculo'
+            vehiculo:'/api/vehiculo',
+            ubicacion:'/api/ubicacion'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -126,7 +127,7 @@ class Server{
         this.app.use(this.paths.politicaprivacidad, require('../routes/politicas-privacidad'));
         this.app.use(this.paths.generarcodigo, require('../routes/generar-codigo'));
         this.app.use(this.paths.vehiculo, require('../routes/vehiculos'));
-
+        this.app.use(this.paths.ubicacion, require('../routes/ubicacion'));
 
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
