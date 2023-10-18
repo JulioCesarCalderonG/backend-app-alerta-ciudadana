@@ -5,6 +5,7 @@ class Marcador{
         id ='',
         nombre='',
         vehiculo='',
+        id_vehiculo='',
         lng,
         lat,
         color=''
