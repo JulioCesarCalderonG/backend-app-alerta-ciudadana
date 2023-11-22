@@ -1,10 +1,9 @@
 const { Router, request, response } = require("express");
-const Mapa = require("../classes/mapa");
-//const { mapa } = require("../sockets/sockets");
+const {mapa} = require("../sockets/mapa-socket");
 
 
 const router = Router();
-const mapa = new Mapa();
+
 
 router.get('/mapa', (req=request, res=response)=>{
 

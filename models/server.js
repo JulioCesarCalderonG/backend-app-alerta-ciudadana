@@ -11,6 +11,7 @@ const { actualizarAlertaCiudadano } = require('../sockets/alertas-socket');
 const { AlertaDerivadaSocket, borrarAlertaDerivada, actualizarAlertaDerivada, atenderAlertaDerivada } = require('../sockets/alerta-derivada-socket');
 const { loginUser, logoutUser } = require('../sockets/sesion-socket');
 const { registrarAlertaGenerada } = require('../sockets/alerta-registrada-socket');
+const { mapaSockets } = require('../sockets/mapa-socket');
 
 class Server{
     static _intance=Server;
@@ -85,6 +86,7 @@ class Server{
             logoutUser(cliente,this.io);
             registrarAlertaGenerada(cliente,this.io);
             atenderAlertaDerivada(cliente,this.io);
+            mapaSockets(cliente,this.io);
         })
     }
     middlewares(){
