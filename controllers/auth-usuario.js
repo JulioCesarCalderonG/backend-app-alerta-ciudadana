@@ -138,6 +138,14 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
         token: null,
       });
     }
+    if (resp.disponible===1) {
+      return res.json({
+        ok: false,
+        msg: "Usted ya inicio sesion en otro dispositivo",
+        user: null,
+        token: null,
+      });
+    }
     if (resp.Cargo.cargo==='UA') {
       return res.json({
         ok: false,
@@ -166,7 +174,7 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
       estado:0
     },{
       where:{
-        id:vehiculo
+        nombre:vehiculo
       }
     })
     token = await generarJWTUsuarioDos(resp.id, vehiculo);
@@ -200,7 +208,7 @@ const logoutUsuarioSerenazgo = async (req = request, res = response)=>{
       estado:1
     },{
       where:{
-        id:vehiculo
+        nombre:vehiculo
       }
     })
     res.json({
@@ -224,7 +232,7 @@ const validarTokenUsuario = async (req = request, res = response) => {
       estado:0
     },{
       where:{
-        id:vehiculo
+        nombre:vehiculo
       }
     })
     res.json({

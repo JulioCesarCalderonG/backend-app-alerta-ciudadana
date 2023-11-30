@@ -8,10 +8,11 @@ const mapa = new Mapa();
 
 const mapaSockets = ( cliente= Socket, io= socketIO.Server ) => {
 
-    cliente.on('vehiculo-nuevo',(marcador=Marcador)=>{
-            mapa.agregarMarcador(marcador);
-            cliente.broadcast.emit('vehiculo-nuevo',marcador);
+    cliente.on('vehiculo-nuevo',(marcador=Marcador,token='')=>{
+            //mapa.agregarMarcador(marcador);
 
+            //cliente.broadcast.emit('vehiculo-nuevo',marcador);
+                console.log(marcador);
     })
     cliente.on('vehiculo-borrar',(id='')=>{
             mapa.borrarMarcador(id);

@@ -1,8 +1,8 @@
 const Marcador = require("./marcador");
 
 class Mapa {
-  marcadores = {
-    '1':{
+  marcadores = {};
+   /*  '1':{
         id :'1',
         nombre:'Julio cesar',
         id_vehiculo:'1',
@@ -28,8 +28,8 @@ class Mapa {
         lng:-74.58292,
         lat:-8.411074,
         color:'#19884b'
-    }
-  };
+    } */
+  
   constructor() {}
 
   agregarMarcador(marcador = Marcador) {
