@@ -16,7 +16,7 @@ Ciudadano.init({
         type: DataTypes.STRING,
         allowNull:false
     },
-    apellido:{
+    usuario:{
         type:DataTypes.STRING,
         allowNull:false
     },

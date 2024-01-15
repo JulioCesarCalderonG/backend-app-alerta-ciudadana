@@ -4,18 +4,19 @@ const {generarJWT} = require("../helpers");
 const { Ciudadano } = require("../models");
 
 const postLogin = async (req = request, res = response) => {
-  const { coleccion } = req.params;
+  try {
+    const { coleccion } = req.params;
   let password;
-  let dni;
+  let usuario;
   let validarPassword;
   let token;
   switch (coleccion) {
     case "ciudadano":
-      dni = req.body.dni;
+      usuario = req.body.usuario;
       password = req.body.password;
       const resp = await Ciudadano.findOne({
         where: {
-          dni,
+          usuario,
         },
       });
       if (!resp) {
@@ -53,6 +54,11 @@ const postLogin = async (req = request, res = response) => {
       break;
     default:
       break;
+  }
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
+    });
   }
 };
 const validarTokenCiudadano = async (req = request, res = response) => {

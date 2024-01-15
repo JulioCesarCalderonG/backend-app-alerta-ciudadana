@@ -38,6 +38,11 @@ const getCiudadanos = async (req = request, res = response) => {
               [Op.startsWith]: `%${buscar}%`,
             },
           },
+          {
+            usuario: {
+              [Op.startsWith]: `%${buscar}%`,
+            },
+          }
         ],
       },
     });
@@ -75,7 +80,7 @@ const getCiudadano = async (req = request, res = response) => {
 };
 const postCiudadano = async (req = request, res = response) => {
   try {
-    const { password, dni,celular, ...data } = req.body;
+    const { password, dni,celular,usuario, ...data } = req.body;
 
     // Verificamos si el ciudadano ya esta registrado
     const resp = await Ciudadano.findOne({
@@ -89,7 +94,18 @@ const postCiudadano = async (req = request, res = response) => {
         msg: `El dni ya esta registrado en el sistema`,
       });
     }
-
+    //Verificamos si el ciudadano ya esta registrado con el usuario
+    const resp2 = await Ciudadano.findOne({
+      where:{
+        usuario
+      }
+    });
+    if (resp2) {
+      return res.status(400).json({
+        ok: false,
+        msg: `El usuario ya esta existe, registrate con otro usuario`,
+      });
+    }
     // Validamos el password
     if (password.length <= 6) {
       return res.status(400).json({
@@ -102,13 +118,13 @@ const postCiudadano = async (req = request, res = response) => {
     const hasPassword = bcryptjs.hashSync(password, salt);
     data.password = hasPassword;
     data.dni = dni;
+    data.usuario=usuario;
     // Realizamos la subida del usuario al BD
     const ciudadano = await Ciudadano.create(data);
     // Realizamos la subida a la tabla detalle ciudadano
     const detalleCiudadano = await DetalleCiudadano.create({celular,id_ciudadano:ciudadano.id});
     // Generamos un token al nuevo usuario
     const token = await generarJWT(ciudadano.id);
-
     res.json({
       ok: true,
       msg: "Se registro el usuario con exito",
