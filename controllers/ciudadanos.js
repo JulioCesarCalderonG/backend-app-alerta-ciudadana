@@ -80,7 +80,7 @@ const getCiudadano = async (req = request, res = response) => {
 };
 const postCiudadano = async (req = request, res = response) => {
   try {
-    const { password, dni,celular,usuario, ...data } = req.body;
+    const { password, dni,celular,usuario,nombre, ...data } = req.body;
 
     // Verificamos si el ciudadano ya esta registrado
     const resp = await Ciudadano.findOne({
@@ -119,6 +119,7 @@ const postCiudadano = async (req = request, res = response) => {
     data.password = hasPassword;
     data.dni = dni;
     data.usuario=usuario;
+    data.nombre = nombre.toUpperCase();
     // Realizamos la subida del usuario al BD
     const ciudadano = await Ciudadano.create(data);
     // Realizamos la subida a la tabla detalle ciudadano

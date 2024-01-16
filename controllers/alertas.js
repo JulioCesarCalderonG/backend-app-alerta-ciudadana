@@ -219,7 +219,7 @@ const postAlerta = async (req = request, res = response) => {
     }
     data.fecha = fecha;
     data.hora = hora;
-    data.ciudadano = `${ciudadano.nombre} ${ciudadano.apellido}`;
+    data.ciudadano = `${ciudadano.nombre}`;
     data.dni=ciudadano.dni;
     data.ano=ano;
     data.mes=mes;
