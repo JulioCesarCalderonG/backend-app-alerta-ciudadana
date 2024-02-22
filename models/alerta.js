@@ -40,6 +40,10 @@ Alerta.init({
     },
     correo:{
         type:DataTypes.STRING
+    },
+    atendido:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
     }
 },{
     sequelize,
