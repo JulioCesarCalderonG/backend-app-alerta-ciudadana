@@ -1,6 +1,6 @@
 const { Router, request, response } = require("express");
-const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta, getAlertaCiudadano, filtroAlerta, getFiltroAlertas } = require("../controllers/alertas");
-const { validarCampos, validarJWT } = require("../middlewares");
+const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta, getAlertaCiudadano, filtroAlerta, getFiltroAlertas, putAlertaAtendido } = require("../controllers/alertas");
+const { validarCampos, validarJWT, validarJWTUsuario } = require("../middlewares");
 const { funDate, funDateDos } = require("../helpers");
 
 const router = Router();
@@ -19,7 +19,10 @@ router.post('',[
 ],postAlerta);
 router.put('/:id',putAlerta);
 router.delete('/:id',deleteAlerta);
-
+router.put('/atencion/:id',[
+    validarJWTUsuario,
+    validarCampos
+],putAlertaAtendido);
 
 router.get('/mostrar/zonahoraria',(req=request,res=response)=>{
     const {fecha,hora,date} = funDate();
@@ -31,7 +34,9 @@ router.get('/mostrar/zonahoraria',(req=request,res=response)=>{
         newDateObj,
         date
     })
-})
+});
+
+
 
 
 module.exports = router;
