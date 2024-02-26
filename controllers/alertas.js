@@ -40,7 +40,18 @@ const getFiltroAlertas = async (req = request, res = response) => {
     if (buscar === "") {
       const alerta = await Alerta.findAll({
         where: {
-          [Op.or]: [{ fecha: fechaAnterior }, { fecha: fecha }],
+          
+          [Op.or]: [
+            { fecha: fechaAnterior }, 
+            { fecha: fecha }
+          ],
+          [Op.and]:[
+            {
+              spam:{
+                [Op.ne]:1
+              }
+            }
+          ]
         },
         order: [
           ["fecha", "DESC"],
@@ -266,6 +277,40 @@ const putAlertaAtendido = async (req = request, res = response) => {
     });
   }
 };
+
+const putAlertaSpam = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const {spam, ...data} = req.body;
+    switch (String(spam)) {
+      case '0':
+          data.spam=1;
+        break;
+      case '1':
+          data.spam=0;
+        break;
+      default:
+        break;
+    }
+    const alerta = await Alerta.update(data, {
+      where: {
+        id
+      },
+    });
+
+    res.json({
+      ok: true,
+      msg: "Se marco la alerta como spam",
+      alerta,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
+
 const deleteAlerta = async (req = request, res = response) => {
   try {
     res.json({
@@ -288,5 +333,6 @@ module.exports = {
   postAlerta,
   putAlerta,
   putAlertaAtendido,
+  putAlertaSpam,
   deleteAlerta,
 };

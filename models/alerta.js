@@ -44,6 +44,10 @@ Alerta.init({
     atendido:{
         type:DataTypes.TINYINT,
         defaultValue:0
+    },
+    spam:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
     }
 },{
     sequelize,
