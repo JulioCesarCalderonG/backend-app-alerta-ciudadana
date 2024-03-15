@@ -5,11 +5,11 @@ const enviarWelcome = async (email='', token='') => {
 
   try {
     const envioEmail = await transport.sendMail({
-      from: '"MPCP 👻" <gongalso@gongalsoft.com>', // sender address
+      from: '"MPCP 👻" <informatica@gongalsoft.com>', // sender address
       to: email, // list of receivers
       subject: `ALERTA CIUDADANA CALLERIA`, // Subject line
       //text: "Hello world?", // plain text body
-      html: `<h4>Para cambiar su contraseña porfavor, ingrese al siguiente enlace</h4><a href="https://gongalsoft.com/resetpassword.html?token=${token}">Cambiar Contraseña</a> `// html body
+      html: `<h4>Para cambiar su contraseña porfavor, ingrese al siguiente enlace</h4><a href="https://backendmuni.gongalsoft.com/resetpassword.html?token=${token}">Cambiar Contraseña</a> `// html body
     });
     if (!envioEmail) {
         return {
@@ -40,7 +40,7 @@ const enviarCodigo = async (email='', codigo='') => {
 
   try {
     const envioEmail = await transport.sendMail({
-      from: '"MPCP 👻" <gongalso@gongalsoft.com>', // sender address
+      from: '"MPCP 👻" <informatica@gongalsoft.com>', // sender address
       to: email, // list of receivers
       subject: `ALERTA CIUDADANA CALLERIA`, // Subject line
       //text: "Hello world?", // plain text body
