@@ -49,7 +49,35 @@ const postGenerarCodigo=async(req=request,res=response)=>{
         })
     }
 }
-
+const postGenerarCodigoToken=async(req=request,res=response)=>{
+    try {
+        const resp = req.ciudadanoToken;
+        
+        const detalle= await DetalleCiudadano.findOne({
+            where:{
+                id_ciudadano:resp.id
+            }
+        });
+        if (!detalle) {
+            return res.json({
+                ok:false,
+                msg:'La cuenta no esta asociada a un correo, porfavor ingrese a la seccion mi perfil y registre un correo electronico'
+            })
+        }
+        const codigo= Math.floor(Math.random()*16777215).toString(16);
+        const email = await enviarCodigo(detalle.correo,codigo.toUpperCase())
+        res.json({
+            ok:true,
+            codigo: codigo.toUpperCase(),
+            ciudadano:resp
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`
+        })
+    }
+}
 const eliminarCuenta=async(req=request,res=response)=>{
     try {
         const {id} = req.params;
@@ -89,5 +117,6 @@ const eliminarCuenta=async(req=request,res=response)=>{
 
 module.exports = {
     postGenerarCodigo,
+    postGenerarCodigoToken,
     eliminarCuenta
 };
