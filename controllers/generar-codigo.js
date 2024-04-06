@@ -5,17 +5,17 @@ const { enviarCodigo } = require("../helpers");
 
 const postGenerarCodigo=async(req=request,res=response)=>{
     try {
-        const {dni,correo} = req.body;
+        const {usuario,correo} = req.body;
 
         const ciudadano = await Ciudadano.findOne({
             where:{
-                dni
+                usuario
             }
         });
         if (!ciudadano) {
             return res.status(400).json({
                 ok:false,
-                msg:'El dni no tiene una cuenta registrada'
+                msg:'El usuario no tiene una cuenta registrada'
             })
         }
         const detalle= await DetalleCiudadano.findOne({
