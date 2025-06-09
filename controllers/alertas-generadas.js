@@ -4,10 +4,11 @@ const {
   addHoursToDate,
   fechaAntes,
   funDate,
+  alertaGenerada,
 } = require('../helpers');
 const { AlertaGenerada, Alerta } = require('../models');
 const sequelize = require('../database/database');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 
 const getAlertasGeneradas = async (req = request, res = response) => {
   try {
@@ -114,8 +115,17 @@ const postAlertasGenerada = async (req = request, res = response) => {
 };
 const putAlertasGenerada = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const data = req.body;
+    
+    const resp = await alertaGenerada.update(data, {
+      where:{
+        id
+      }
+    })
     res.json({
       ok: true,
+      msg:'se actualizo el tipo de alerta con exito'
     });
   } catch (error) {
     res.status(400).json({
@@ -126,8 +136,22 @@ const putAlertasGenerada = async (req = request, res = response) => {
 };
 const deleteAlertasGenerada = async (req = request, res = response) => {
   try {
+    const {id} = req.params;
+    const alert = await alertaGenerada.findOne({where:{id}})
+    const resp = await alertaGenerada.destroy({where:{id}})
+    if (deletedCount === 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'No se encontró la alerta para eliminar'
+      });
+    }
+    const alerta = await Alerta.update(
+      { registrado: 0 },
+      { where: { id:alert.id_alerta } }
+    );
     res.json({
       ok: true,
+      msg:'Tipo de alerta borrado con exito'
     });
   } catch (error) {
     res.status(400).json({

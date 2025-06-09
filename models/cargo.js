@@ -24,15 +24,6 @@ Cargo.init({
     timestamps:false
 });
 
-Cargo.hasOne(Usuario,{
-    as:'CargoUsuario',
-    foreignKey:'id_cargo'
-});
-Usuario.belongsTo(Cargo,{
-    foreignKey:'id_cargo',
-    sourceKey:'id'
-})
-
 
 
 

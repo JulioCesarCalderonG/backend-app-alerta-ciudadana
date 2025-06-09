@@ -11,8 +11,10 @@ const authUsuario = async (req = request, res = response) => {
       where: {
         dni
       },
-      include:{
-        model:Cargo
+      include:
+        {
+        model:Cargo,
+        as:'cargousuario'
       }
     });
     if (!resp) {
@@ -31,7 +33,7 @@ const authUsuario = async (req = request, res = response) => {
         token: null,
       });
     }
-    if (resp.Cargo.cargo==='UN') {
+    if (resp.cargousuario.cargo==='UN') {
       return res.json({
         ok: false,
         msg: "Usted no es un usuario administrador",
@@ -62,7 +64,7 @@ const authUsuario = async (req = request, res = response) => {
       horaingreso:hora
     }
     const cpersonal = await ControlPersonal.create(enviPersonal);
-    token = await generarJWTUsuario(resp.id, resp.Cargo.cargo);
+    token = await generarJWTUsuario(resp.id, resp.cargousuario.cargo);
     res.json({
         ok: true,
         msg: "Login correcto",
@@ -73,7 +75,7 @@ const authUsuario = async (req = request, res = response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: `${error}`,
+      msg: `${error}-aca`,
     });
   }
 };
@@ -119,7 +121,8 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
         dni
       },
       include:{
-        model:Cargo
+        model:Cargo,
+        as:'cargousuario'
       }
     });
     if (!resp) {

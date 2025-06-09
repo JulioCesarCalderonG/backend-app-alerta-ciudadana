@@ -26,4 +26,5 @@ DetalleCiudadano.init({
 
 
 
+
 module.exports = DetalleCiudadano

@@ -11,7 +11,8 @@ const getUsuarios = async (req = request, res = response) => {
       },
       include:[
         {
-          model:Cargo
+          model:Cargo,
+          as:'cargousuario'
         }
       ]
     });
@@ -33,12 +34,16 @@ const getSerenazgo = async (req = request, res = response) => {
     const usuario = await Usuario.findAll({
       where:{
         estado:1,
-        disponible:1,
-        id_cargo:1
+        disponible:1
+        
       },
       include:[
         {
-          model:Cargo
+          model:Cargo,
+          as:'cargousuario',
+          where:{
+            cargo:'US'
+          }
         }
       ]
     });

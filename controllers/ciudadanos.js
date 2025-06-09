@@ -34,11 +34,6 @@ const getCiudadanos = async (req = request, res = response) => {
             },
           },
           {
-            apellido: {
-              [Op.startsWith]: `%${buscar}%`,
-            },
-          },
-          {
             usuario: {
               [Op.startsWith]: `%${buscar}%`,
             },
