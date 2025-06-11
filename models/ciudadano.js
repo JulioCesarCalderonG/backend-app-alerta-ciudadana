@@ -32,9 +32,6 @@ Ciudadano.init({
     timestamps:false
 });
 
-
-
-
 /* Foreign key alerta */
 /* Ciudadano.hasMany(Alerta,{
     as:'ciudadanoAlerta',
@@ -43,7 +40,7 @@ Ciudadano.init({
 Alerta.belongsTo(Ciudadano,{
     foreignKey:'ciudadano',
     sourceKey:'id'
-}); */
-
+});
+ */
 
 module.exports = Ciudadano;

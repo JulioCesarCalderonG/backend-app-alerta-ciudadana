@@ -14,14 +14,12 @@ const getAlertaDerivadas=async (req = request, res = response) =>{
                 include:[
                     {
                         model:Alerta,
-                        include:[
-                            {
-                                model:Ciudadano
-                            }
-                        ]
+                        as:'derivadaalerta',
+                        
                     },
                     {
-                        model:Usuario
+                        model:Usuario,
+                        as:'derivadausuario'
                     }
                 ]
             }
@@ -53,14 +51,12 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                 include:[
                     {
                         model:Alerta,
-                        include:[
-                            {
-                                model:Ciudadano,
-                            }
-                        ]
+                        as:'derivadaalerta',
+                        
                     },
                     {
-                        model:Usuario
+                        model:Usuario,
+                        as:'derivadausuario'
                     }
                 ]
             }
@@ -104,13 +100,16 @@ const getAlertaDerivada=async (req = request, res = response) =>{
                 id
             },
             include:[
-                {
-                    model:Alerta
-                },
-                {
-                    model:Usuario
-                }
-            ]
+                    {
+                        model:Alerta,
+                        as:'derivadaalerta',
+                        
+                    },
+                    {
+                        model:Usuario,
+                        as:'derivadausuario'
+                    }
+                ]
         })
         res.json({
             ok:true,

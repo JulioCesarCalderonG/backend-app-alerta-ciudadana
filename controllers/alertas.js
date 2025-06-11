@@ -15,7 +15,7 @@ const getAlertas = async (req = request, res = response) => {
     const alerta = await Alerta.findAll({
       include: [
         {
-          model: Ciudadano,
+          model: Ciudadano
         },
       ],
     });

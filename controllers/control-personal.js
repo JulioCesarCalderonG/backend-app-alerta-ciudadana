@@ -8,9 +8,11 @@ const mostrarControlPersonal =async(req=request,res=response)=>{
             include:[
                 {
                     model:Usuario,
+                    as:'usuario',
                     include:[
                         {
-                            model:Cargo
+                            model:Cargo,
+                            as:'cargousuario'
                         }
                     ]
                 }

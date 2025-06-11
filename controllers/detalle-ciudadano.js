@@ -26,7 +26,8 @@ const getDetalleCiudadano = async (req = request, res = response) => {
       },
       include:[
         {
-          model:Ciudadano
+          model:Ciudadano,
+          as:'ciudadano'
         }
       ]
     });
