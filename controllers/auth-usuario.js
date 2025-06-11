@@ -149,7 +149,7 @@ const authUsuarioSerenazgo = async (req = request, res = response) => {
         token: null,
       });
     }
-    if (resp.Cargo.cargo==='UA') {
+    if (resp.cargousuario.cargo==='UA' && resp.cargousuario.cargo==='UO') {
       return res.json({
         ok: false,
         msg: "Usted no es un usuario serenazgo",
