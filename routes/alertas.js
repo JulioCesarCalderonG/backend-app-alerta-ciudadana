@@ -10,6 +10,7 @@ const {
   getFiltroAlertas,
   putAlertaAtendido,
   putAlertaSpam,
+  getAlertaSpam,
 } = require("../controllers/alertas");
 const {
   validarCampos,
@@ -21,6 +22,7 @@ const { funDate, funDateDos } = require("../helpers");
 const router = Router();
 
 router.get("", getAlertas);
+router.get("/alerta/spam", getAlertaSpam);
 router.get("/mostrar/filtro/alerta", getFiltroAlertas);
 router.get(
   "/mostrar/ciudadano",

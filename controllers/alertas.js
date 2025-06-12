@@ -12,12 +12,27 @@ const { Op } = require("sequelize");
 const getAlertas = async (req = request, res = response) => {
   try {
     const data = req.body;
+    const alerta = await Alerta.findAll();
+    res.json({
+      data,
+      ok: true,
+      msg: `Se muestra todos las alertas cudadanas`,
+      alerta,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error: ${error}`,
+    });
+  }
+};
+const getAlertaSpam = async (req = request, res = response) => {
+  try {
+    const data = req.body;
     const alerta = await Alerta.findAll({
-      include: [
-        {
-          model: Ciudadano
-        },
-      ],
+     where:{
+      spam:1
+     }
     });
     res.json({
       data,
@@ -327,6 +342,7 @@ const deleteAlerta = async (req = request, res = response) => {
 module.exports = {
   getAlertas,
   getAlerta,
+  getAlertaSpam,
   getFiltroAlertas,
   getAlertaCiudadano,
   filtroAlerta,

@@ -51,12 +51,13 @@ const alertaDerivada= async(id_alerta='')=>{
         },
         include:[
             {
-                model:Usuario
+                model:Usuario,
+                as:'derivadausuario'
             }
         ]
     });
     if (resp) {
-        throw new Error(`La alerta ya ha sido derivado al serenazgo ${resp.Usuario.nombre} ${resp.Usuario.apellido}`);
+        throw new Error(`La alerta ya ha sido derivado al serenazgo ${resp.derivadausuario.nombre} ${resp.derivadausuario.apellido}`);
     }
 }
 
