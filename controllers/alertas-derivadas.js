@@ -61,8 +61,7 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                 ]
             }
         );
-        let array=[];
-        if (alertaDerivada) {
+        /* if (alertaDerivada) {
             for (let i = 0; i < alertaDerivada.length; i++) {
                 //const opt={};
                 const resp = await DetalleCiudadano.findOne({
@@ -78,12 +77,12 @@ const getAlertaDerivadasUsuario=async (req = request, res = response) =>{
                 }
                 array.push(opt)    
             }
-        }
+        } */
 
         res.json({
             ok:true,
             msg:'Se muestran las alertas derivadas con exito',
-            alertaDerivada:array
+            alertaDerivada
         })
     } catch (error) {
         res.status(400).json({
